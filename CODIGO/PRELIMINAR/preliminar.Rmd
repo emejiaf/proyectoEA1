@@ -30,6 +30,35 @@ lapply(paquetes.utilizados, library, character.only = TRUE)
 
 
 ```{r  lectura}
-datos <- read.xlsx("./DATOS/BRUTOS/xlsx/f_m-2011.xlsx", sheet = 1, startRow = 1, colNames = TRUE, rows = c(1:33), skipEmptyRows = TRUE, rowNames = FALSE, detectDates = FALSE,cols = c(1:10))
+cfuente <-c("f","g","m")
+cgenero <-c("f","m") 
+
+for (i in cfuente){
+  
+  for (j in cgenero){
+    
+      for (año in 2003:2013){?
+       paste0(i,"_",j,"-",año) <- read.table(paste0(".\\DATOS\\BRUTOS\\txt\\",i,"_",j,"-",año,".txt"), skip = 10, fill = TRUE ) 
+      }
+  
+  }
+   
+}
+
+
+for (i in 2003:2010){
+      i <- read.table(paste0(".\\DATOS\\BRUTOS\\txt\\f_g-",i,".txt"), skip = 10, fill = TRUE ) 
+}
+
+
+```
+
+
+```{r}
+
+for i in cfuente
+  i
+
+
 ```
 
