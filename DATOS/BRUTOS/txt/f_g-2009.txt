@@ -1,0 +1,43 @@
+
+
+Casos de Diabetes mellitus no insulinodependiente (Tipo II) (E11-E14) por fuente de notificación
+Estados Unidos Mexicanos
+2009
+                                                                                 Población General                                                                                 
+Fuente de notificación
+Estado                         Salud    IMSS-ORD          ISSSTE       IMSS-OP                DIF          PEMEX        SEDENA          SEMAR            Otras            Total
+Aguascalientes                        1 558          1 346             373             S/R              26             S/R             122             S/R             173          3 598
+Baja California                        4 030          7 188             647             129             S/R             S/R              27                0          1 044        13 065
+Baja California Sur                    569          1 497             150             S/R             S/R             S/R                0              17             S/R          2 233
+Campeche                                1 094             711             229             188              24                6                6              27              23          2 308
+Coahuila                                  1 624          7 615          1 827             454              11             S/R              32             S/R          4 765        16 328
+Colima                                         919             977              53             S/R                1             S/R                0              21              65          2 036
+Chiapas                                    4 714          2 969          2 303          1 355             S/R             145              12              32                0        11 530
+Chihuahua                               4 360          9 667             963             253             S/R             S/R             375             S/R          4 018        19 636
+Distrito Federal                    11 835        10 509          9 402              48             547             240             542              82          1 656        34 861
+Durango                                   1 016          3 448          1 976             281                1             S/R              22             S/R             285          7 029
+Guanajuato                              7 714          8 666             606              23             S/R              35             210             S/R          1 090        18 344
+Guerrero                                  5 548          3 875          3 441              79             S/R             S/R              16              11             S/R        12 970
+Hidalgo                                    3 572          1 980          1 666             533                0             101              11             S/R              32          7 895
+Jalisco                                      6 808        14 870          1 243              28             137              43              25                5          8 019        31 178
+México                                   22 277        20 237          5 050              19          4 823             S/R             416             S/R          4 963        57 785
+Michoacán                               4 044          4 976          4 144          1 040             S/R             S/R                0              16             S/R        14 220
+Morelos                                    2 824          5 827          3 207              32             S/R             S/R              77             S/R             S/R        11 967
+Nayarit                                     1 115             971          1 287             106              52             S/R                0              90              72          3 693
+Nuevo León                             2 527          9 561             374                6             S/R             160              81             S/R          6 185        18 894
+Oaxaca                                     5 311          2 768          2 135          1 574              89             161             290              63             133        12 524
+Puebla                                     3 381          7 164          4 047          1 060             987             133                3             S/R          1 176        17 951
+Querétaro                                2 068          2 285             482              25              71             S/R              62             S/R             110          5 103
+Quintana Roo                          1 115          1 341          1 139             S/R             S/R             S/R              40              11             S/R          3 646
+San Luis Potosí                       3 534          5 080          1 683          1 113             S/R                6              62             S/R              84        11 562
+Sinaloa                                     6 747          4 999             656             178             463              10                6              67          1 763        14 889
+Sonora                                     1 850          5 860             800                7             S/R             S/R              65              18              88          8 688
+Tabasco                                   3 196          2 869             995             S/R             S/R             807              12              15             996          8 890
+Tamaulipas                              3 985          6 489          1 855             256                0             403              63             110             125        13 286
+Tlaxcala                                   1 373          1 599             906                6                1             S/R                6             S/R              66          3 957
+Veracruz                                  6 918        10 381          1 635          2 365             102             560             185             402             S/R        22 548
+Yucatán                                   2 231          4 883          1 089             459              45             S/R                0                2             851          9 560
+Zacatecas                                1 808          1 938             277             495              82             S/R                0             S/R              28          4 628
+TOTAL GLOBAL                            131 665     174 546       56 640       12 112         7 462         2 810         2 768            989       37 810     426 802
+FUENTE : Sistema Único de Información para la Vigilancia Epidemiológica/Dirección General de Epidemiología/Secretaría de Salud/México 2009
+S/R= No hay presencia de la institución en la entidad federativa.
