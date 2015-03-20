@@ -1,0 +1,35 @@
+Analisis de datos
+========================================================
+
+
+
+
+
+```{r}
+
+directorio <- "C:\\Users\\Patatas\\Desktop\\proyecto estadistica\\"
+setwd(directorio)
+
+```
+
+
+
+### Librerias utilizadas
+```{r Librerias, results = 'hide'}
+paquetes.utilizados <- c("reshape2", "tidyr", "xtable", "knitr", 
+                         "dplyr", "plyr", "lubridate", "ggplot2", "openxlsx")
+paquetes.instalados <- rownames(installed.packages())
+paquetes.por.instalar <- setdiff(paquetes.utilizados, paquetes.instalados)
+
+# Instala los paquetes faltantes.
+if (length(paquetes.por.instalar) != 0 ) install.packages(paquetes.por.instalar, 
+                                                          repos = "http://cran.us.r-project.org")
+# Carga los paquetes a utilizar.
+lapply(paquetes.utilizados, library, character.only = TRUE)
+```
+
+
+```{r  lectura}
+datos <- read.xlsx("./DATOS/BRUTOS/xlsx/f_m-2011.xlsx", sheet = 1, startRow = 1, colNames = TRUE, rows = c(1:33), skipEmptyRows = TRUE, rowNames = FALSE, detectDates = FALSE,cols = c(1:10))
+```
+
