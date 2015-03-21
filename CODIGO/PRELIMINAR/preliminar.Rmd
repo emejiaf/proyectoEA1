@@ -7,7 +7,7 @@ Analisis de datos
 
 ```{r}
 
-directorio <- "C:\\Users\\Patatas\\Desktop\\proyecto estadistica\\"
+directorio <- "C:\\Users\\Patatas\\Desktop\\ea1-pr"
 setwd(directorio)
 
 ```
@@ -16,7 +16,7 @@ setwd(directorio)
 
 ### Librerias utilizadas
 ```{r Librerias, results = 'hide'}
-paquetes.utilizados <- c("reshape2", "tidyr", "xtable", "knitr", 
+paquetes.utilizados <- c("reshape2", "tidyr", "xtable", "knitr", "qdap",
                          "dplyr", "plyr", "lubridate", "ggplot2", "openxlsx")
 paquetes.instalados <- rownames(installed.packages())
 paquetes.por.instalar <- setdiff(paquetes.utilizados, paquetes.instalados)
@@ -30,35 +30,21 @@ lapply(paquetes.utilizados, library, character.only = TRUE)
 
 
 ```{r  lectura}
-cfuente <-c("f","g","m")
-cgenero <-c("f","m") 
-
-for (i in cfuente){
-  
-  for (j in cgenero){
-    
-      for (año in 2003:2013){?
-       paste0(i,"_",j,"-",año) <- read.table(paste0(".\\DATOS\\BRUTOS\\txt\\",i,"_",j,"-",año,".txt"), skip = 10, fill = TRUE ) 
-      }
-  
-  }
-   
+setwd("./DATOS/BRUTOS/csv")
+nombres <- list.files(pattern= "*.csv")
+for (i in 1:length(nombres)){
+  assign( substr(nombres[i], 1, nchar(nombres[i])-4), read.csv(nombres[i]))
 }
-
-
-for (i in 2003:2010){
-      i <- read.table(paste0(".\\DATOS\\BRUTOS\\txt\\f_g-",i,".txt"), skip = 10, fill = TRUE ) 
-}
-
 
 ```
 
 
 ```{r}
-
-for i in cfuente
-  i
-
+prueba <- melt (`f_f-2003`, na.rm=TRUE, variable.name = "fuente")
+prueba1 <- melt(prueba, variable.name = "estado")
 
 ```
+
+
+
 
