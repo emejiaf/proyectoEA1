@@ -38,10 +38,20 @@ for (i in 1:length(nombres)){
 
 ```
 
+```{r nombres}
+nombres_sin <- nombres
+for (i in 1:length(nombres)){
+  nombres_sin[i] <- substr(nombres[i], 1, nchar(nombres[i])-4)
+}
+
+```
 
 ```{r}
-prueba <- melt (`f_f-2003`, na.rm=TRUE, variable.name = "fuente")
-prueba1 <- melt(prueba, variable.name = "estado")
+
+for (i in 1:33){
+  assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="fuente", value.name= "numero", id =1))
+  
+}
 
 ```
 
