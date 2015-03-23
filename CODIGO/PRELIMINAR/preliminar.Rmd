@@ -46,10 +46,23 @@ for (i in 1:length(nombres)){
 
 ```
 
-```{r}
+```{r melt }
 
 for (i in 1:33){
   assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="fuente", value.name= "numero", id =1))
+  
+}
+
+
+
+for (i in 33:66){
+  assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="Grupo de edad", value.name= "Observación", id =1))
+  
+}
+
+
+for (i in 66:99){
+  assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="Mes de daño", value.name= "Observación", id =1))
   
 }
 
@@ -106,7 +119,7 @@ for(i in 3:33){
 
 ## por grupo 
 grupo <- rbind(get(unlist(nombres_sin[34])),get(unlist(nombres_sin[35])))
-for(i in 36:33){
+for(i in 36:66){
   grupo <- rbind(get(unlist(nombres_sin[i])),grupo)
   
 }
