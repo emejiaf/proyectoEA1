@@ -154,18 +154,21 @@ fuente <- within(fuente,{
                          Estado <- gsub("Baja California Sur ","Baja California Sur",Estado)
                          Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
                          Estado <- as.factor(Estado)
-                         fuente <- gsub("IMSS.OP", "IMSS.Op", fuente)
-                         fuente <- gsub("IMSS.ORD", "IMSS.Ord", fuente)
                          fuente <- gsub("Institución............................................................................................DIF","DIF", fuente)
                          fuente <- gsub("Otras","OTRAS", fuente)
-                         fuente <- gsub("IMSS.ORD", "IMSS.Ord", fuente)
                          fuente <- gsub("Salud", "SALUD", fuente)
                          fuente <- gsub("SEDEMAR", "SEMAR", fuente)
                          fuente <- gsub("SALUD", "SSA", fuente)
+                         fuente <- gsub("IMSS.ORD","IMMS",fuente)
+                         fuente <- gsub("IMSS.OP","IMMS",fuente)
+                         fuente <- gsub("IMSS.Ord","IMMS",fuente)
+                         fuente <- gsub("IMSS.Op","IMMS",fuente)
+                         fuente <- as.factor(fuente)
+
                     }
                     )
 fuente <- subset (fuente, select= 1:5)##corregir columna agredada (i=32)
-
+                         
 ## por grupo
 
 
@@ -197,7 +200,76 @@ grupo <- within(grupo,{
                     }
                     )
 grupo$grupo <- as.factor(grupo$grupo)
-                       
+
+
+
+
+
+### por mes
+
+Mes <- list("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+
+mes <- within(mes,{
+                         observaciones  <- gsub(" ","", observaciones)
+                         observaciones <- as.integer(observaciones)
+                         for (i in 1:32){
+                            Estado <- gsub(paste0(unlist(estados[i])," "),unlist(estados[i]), Estado)
+                         }
+                         Estado <- gsub("Baja CaliforniaSur","Baja California Sur",Estado)
+                         Estado <- gsub("Baja CaliforniaSu","Baja California Sur",Estado)
+                         Estado <- gsub("Baja California Sur ","Baja California Sur",Estado)
+                         Estado <- gsub("San Luis Potosi","San Luis Potosí�",Estado)
+                         Estado<-gsub("San Luis Potosí ","San Luis Potosí",Estado)
+                         Estado<-gsub("México ","México",Estado)
+                         Estado<-gsub("Michoacán ","Michoacán",Estado)
+                         Estado<-gsub("Nuevo León ","Nuevo León",Estado)
+                         Estado<-gsub("Yucatán ","Yucatán",Estado)
+                         Estado<-gsub("Queretaro","Querétaro",Estado)
+                         Estado<-gsub("San Luis Poto.*","San Luis Potosí",Estado)
+                     
+                         Estado <- as.factor(Estado)
+                         mes<-gsub("Ene.*","Enero",mes)
+                         mes<-gsub("Feb.*","Febrero",mes)
+                         mes<-gsub("Mar.*","Marzo",mes) 
+                         mes<-gsub("Abr.*","Abril",mes)
+                         mes<-gsub("May.*","Mayo",mes)
+                         mes<-gsub("Jun.*","Junio",mes)
+                         mes<-gsub("Jul.*","Julio",mes)
+                         mes<-gsub("Ago.*","Agosto",mes)
+                         mes<-gsub("Sep.*","Septiembre",mes)
+                         mes<-gsub("Oct.*","Octubre",mes)
+                         mes<-gsub("Nov.*","Noviembre",mes)
+                         mes<-gsub("Dic.*","Diciembre",mes)
+                         mes<-gsub("ENE.*","Enero",mes)
+                         mes<-gsub("FEB.*","Febrero",mes)
+                         mes<-gsub("MAR.*","Marzo",mes) 
+                         mes<-gsub("ABR.*","Abril",mes)
+                         mes<-gsub("MAY.*","Mayo",mes)
+                         mes<-gsub("JUN.*","Junio",mes)
+                         mes<-gsub("JUL.*","Julio",mes)
+                         mes<-gsub("AGO.*","Agosto",mes)
+                         mes<-gsub("SEP.*","Septiembre",mes)
+                         mes<-gsub("OCT.*","Octubre",mes)
+                         mes<-gsub("NOV.*","Noviembre",mes)
+                         mes<-gsub("DIC.*","Diciembre",mes)
+                         mes<-as.factor(mes)
+                    }
+                    )
+
+
+mes <- subset (mes, select= 1:5) 
+                
 
 ```
+
+
+
+
+
+
+```{r}
+
+
+```
+
 
