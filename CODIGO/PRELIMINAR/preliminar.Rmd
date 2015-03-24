@@ -154,24 +154,50 @@ fuente <- within(fuente,{
                          Estado <- gsub("Baja California Sur ","Baja California Sur",Estado)
                          Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
                          Estado <- as.factor(Estado)
+                         fuente <- gsub("IMSS.OP", "IMSS.Op", fuente)
+                         fuente <- gsub("IMSS.ORD", "IMSS.Ord", fuente)
+                         fuente <- gsub("Institución............................................................................................DIF","DIF", fuente)
+                         fuente <- gsub("Otras","OTRAS", fuente)
+                         fuente <- gsub("IMSS.ORD", "IMSS.Ord", fuente)
+                         fuente <- gsub("Salud", "SALUD", fuente)
+                         fuente <- gsub("SEDEMAR", "SEMAR", fuente)
+                         fuente <- gsub("SALUD", "SSA", fuente)
                     }
                     )
 fuente <- subset (fuente, select= 1:5)##corregir columna agredada (i=32)
 
 ## por grupo
 
+
+
 grupo <- within(grupo,{
                        Estado <- gsub("Baja California  Sur","Baja California Sur",Estado)
                        Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
-  
-  
-  
+                       Estado <- as.factor(Estado)
+                       observaciones  <- gsub(" ","", observaciones)
+                       observaciones <- as.integer(observaciones)
+                       grupo <- gsub("x","",grupo)  
+                       grupo <- gsub("X","",grupo) 
+                       grupo <- gsub("abr","4",grupo)
+                       grupo <- gsub("sep","9",grupo)
+                       grupo <- gsub("abr","4",grupo)
+                       grupo <- gsub("y","",grupo)
+                       grupo <- gsub("oct","10",grupo)
+                       grupo <- gsub("01","1",grupo)
+                       grupo <- gsub("05","5",grupo)
+                       grupo <- gsub("1.4","1...4",grupo)     
+                       grupo <- gsub("10.14","10...14",grupo) 
+                       grupo <- gsub("5.9","5...9",grupo) 
+                       grupo <- gsub("..1","...1",grupo) 
+                       grupo <- gsub("[.]","-",grupo) 
+                       grupo <- gsub("-19","19",grupo)
+                       grupo <- gsub("-14","14",grupo)
+
+                       grupo <- gsub("Ign-","desconocido",grupo)
                     }
                     )
-
-
-
-                         
+grupo$grupo <- as.factor(grupo$grupo)
+                       
 
 ```
 
