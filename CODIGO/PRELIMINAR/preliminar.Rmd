@@ -5,7 +5,7 @@ Analisis de datos
 
 
 
-```{r}
+```{r directorio}
 
 directorio <- "C:\\Users\\Patatas\\Desktop\\ea1-pr"
 setwd(directorio)
@@ -33,7 +33,7 @@ lapply(paquetes.utilizados, library, character.only = TRUE)
 setwd("./DATOS/BRUTOS/csv")
 nombres <- list.files(pattern= "*.csv")
 for (i in 1:length(nombres)){
-  assign( substr(nombres[i], 1, nchar(nombres[i])-4), read.csv(nombres[i]))
+  assign( substr(nombres[i], 1, nchar(nombres[i])-4), read.csv(nombres[i],stringsAsFactors=FALSE))
 }
 
 ```
@@ -46,23 +46,25 @@ for (i in 1:length(nombres)){
 
 ```
 
+
+
 ```{r melt }
 
 for (i in 1:33){
-  assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="fuente", value.name= "numero", id =1))
+  assign(nombres_sin[i], melt (data = get(nombres_sin[i]), variable.name ="fuente", value.name= "observaciones", id =1))
   
 }
 
 
 
-for (i in 33:66){
-  assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="Grupo de edad", value.name= "Observación", id =1))
+for (i in 34:66){
+  assign(nombres_sin[i], melt (data = get(nombres_sin[i]), variable.name ="grupo", value.name= "observaciones", id =1))
   
 }
 
-
-for (i in 66:99){
-  assign(nombres_sin[i], melt (data = read.csv(nombres[i]), na.rm=TRUE, variable.name ="Mes de daño", value.name= "Observación", id =1))
+## corregir por incidencia, tasa
+for (i in 67:99){
+  assign(nombres_sin[i], melt (data = get(nombres_sin[i]), variable.name ="mes", value.name= "observaciones", id =1))
   
 }
 
@@ -124,9 +126,52 @@ for(i in 36:66){
   
 }
 
-
-
-
+## por mes 
+mes <- rbind(get(unlist(nombres_sin[67])),get(unlist(nombres_sin[68])))
+for(i in 69:99){
+  mes <- rbind(get(unlist(nombres_sin[i])),mes)
+  
+}
 ```
 
+
+
+
+```{r limpieza}
+###limpieza fuente: nombres de estados repetidos eliminados, reclasificacion de columnas
+##numero
+estados <- list("Aguascalientes","Baja California","Baja California Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","México","Michoacán","Morelos","Nayarit","Nuevo León","Oaxaca","Puebla","Querétaro","Quintana Roo","San Luis Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas")
+
+fuente <- within(fuente,{
+                         observaciones  <- gsub(" ","", observaciones)
+                         observaciones <- as.integer(observaciones)
+                         for (i in 1:32){
+                           Estado <- gsub(paste0(unlist(estados[i])," "),unlist(estados[i]), Estado)
+                           
+                         }
+                         Estado <- gsub("Baja CaliforniaSur","Baja California Sur",Estado)
+                         Estado <- gsub("Baja CaliforniaSu","Baja California Sur",Estado)
+                         Estado <- gsub("Baja California Sur ","Baja California Sur",Estado)
+                         Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
+                         Estado <- as.factor(Estado)
+                    }
+                    )
+fuente <- subset (fuente, select= 1:5)##corregir columna agredada (i=32)
+
+## por grupo
+
+grupo <- within(grupo,{
+                       Estado <- gsub("Baja California  Sur","Baja California Sur",Estado)
+                       Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
+  
+  
+  
+                    }
+                    )
+
+
+
+                         
+
+```
 
