@@ -1,7 +1,4 @@
-Analisis de datos
-========================================================
-
-
+---
 
 
 
@@ -429,21 +426,38 @@ for (i in 1:12){
   media_mes_gen[i] <- mean(subset(mes, mes ==Mes[i] & genero == "general")$observaciones, na.rm = TRUE)
 }
 
-columnas <- c("hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
+columnas <- c("fuente","hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
 
 ## data frames validaciones
-validacion_fuente <- data.frame(suma_fuente_mas, suma_fuente_fem, suma_fuente_masfem, suma_fuente_gen, verd_fuente,media_fuente_gen, row.names = Fuente)
+validacion_fuente <- data.frame( unlist(Fuente), suma_fuente_mas, suma_fuente_fem, suma_fuente_masfem, suma_fuente_gen, verd_fuente,media_fuente_gen)
 colnames(validacion_fuente) <- columnas
 
-validacion_mes <- data.frame(suma_mes_mas, suma_mes_fem, suma_mes_masfem, suma_mes_gen, verd_mes, media_mes_gen,row.names = Mes)
+columnas <- c("mes","hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
+
+validacion_mes <- data.frame(unlist(Mes),suma_mes_mas, suma_mes_fem, suma_mes_masfem, suma_mes_gen, verd_mes, media_mes_gen)
 colnames(validacion_mes) <- columnas
-validacion_grupo <- data.frame(suma_grupo_mas, suma_grupo_fem, suma_grupo_masfem, suma_grupo_gen, verd_grupo, media_grupo_gen,row.names = Grupo)
+
+columnas <- c("grupo","hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
+validacion_grupo <- data.frame(unlist(Grupo),suma_grupo_mas, suma_grupo_fem, suma_grupo_masfem, suma_grupo_gen, verd_grupo, media_grupo_gen)
 colnames(validacion_grupo) <- columnas
 
 
 ```
 
 ```{r}
+
+## suma por estados por a;o
+Estados <- list("Aguascalientes","Baja_California","Baja_California_Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito_Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","México","Michoacán","Morelos","Nayarit","Nuevo_León","Oaxaca","Puebla","Querétaro","Quintana_Roo","San_Luis_Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas")
+
+sum_estado_an_gen <- NULL
+for (i in 1:32){
+  nombre <-paste0("sum_",Estados[i],"_an_gen") 
+  nombre <- list()
+  for (j in 1:11){
+    nombre[j] <- sum(subset(fuente, Estado == unlist(Estados[i]) & genero == "general" & año == transf[j], select= "observaciones"), na.rm=TRUE)
+  }
+}
+
 
 
 
@@ -487,7 +501,9 @@ ggplot(mes,aes(x=mes,y=observaciones),mean(y))+geom_boxplot()+facet_wrap(~año+g
 ```
 ```{r practica}
 ggplot(fuente,aes(x=año,y=observaciones))+geom_line(aes(colour=fuente))+facet_wrap(~fuente)+theme(axis.text.x=element_text(angle=90))+theme(legend.position="none",strip.text = element_text(face = "bold"),axis.text.x = element_text(size=15), axis.text.y = element_text(size=15),strip.background = element_blank(),axis.text = element_text(colour="grey",axis.ticks=element_line(colour="grey",axis.title = element_text(colour="grey", size=12), plot.title = element_text(size =20)))
+                                                                                                
                                                                                                                                             
+ggplot(validacion_fuente, aes(x= rownames, y = general ))  +geom_line()                                                                                                                                          
                                                                                                                                             
 ´´´
 
