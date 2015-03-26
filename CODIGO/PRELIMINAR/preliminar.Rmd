@@ -228,6 +228,7 @@ mes <- within(mes,{
                          Estado<-gsub("San Luis Poto.*","San Luis Potosí",Estado)
                      
                          Estado <- as.factor(Estado)
+                         
                          mes<-gsub("Ene.*","Enero",mes)
                          mes<-gsub("Feb.*","Febrero",mes)
                          mes<-gsub("Mar.*","Marzo",mes) 
@@ -267,9 +268,55 @@ mes <- subset (mes, select= 1:5)
 
 
 
-```{r}
+```{r} 
+## valores faltantes
+faltantes_fuente_abs <- length(fuente$observaciones[is.na(fuente$observaciones)])
+faltantes_grupo_abs <- length(grupo$observaciones[is.na(grupo$observaciones)])
+faltantes_mes_abs <- length(mes$observaciones[is.na(mes$observaciones)])  
+
+
+faltantes_fuente_porc <- 100 * faltantes_fuente_abs  / length(fuente$observaciones)
+faltantes_grupo_porc <- 100 * faltantes_grupo_abs  / length(grupo$observaciones)
+faltantes_mes_porc <- 100 * faltantes_mes_abs  / length(mes$observaciones)
 
 
 ```
+
+```{r agregar columna promedios}
+
+nom_fuente <- as.list(unique(fuente$fuente))
+
+for (i in length(nom_fuente)){
+  if()
+  
+  
+}
+prom_SSA <- mean
+
+```
+
+
+
+
+
+
+```{r}
+
+ggplot(grupo,aes(x=Estado,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
+names(grupo)
+ggplot(grupo,aes(x=año,y=observaciones),nrow=2)+geom_line()+facet_wrap(~genero) +theme(axis.text.x=element_text(angle=90))
+
+ggplot(fuente,aes(x=Estado,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
+
+ggplot(fuente,aes(x=fuente,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
+ggplot(mes,aes(x=Estado,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
+
+ggplot(mes,aes(x=mes,y=observaciones),mean(y))+geom_boxplot()+facet_wrap(~año+genero)
+```
+```{r practica}
+ggplot(fuente,aes(x=año,y=observaciones))+geom_line(aes(colour=fuente))+facet_wrap(~fuente)+theme(axis.text.x=element_text(angle=90))+theme(legend.position="none",strip.text = element_text(face = "bold"),axis.text.x = element_text(size=15), axis.text.y = element_text(size=15),strip.background = element_blank(),axis.text = element_text(colour="grey",axis.ticks=element_line(colour="grey",axis.title = element_text(colour="grey", size=12), plot.title = element_text(size =20)))
+                                                                                                                                            
+                                                                                                                                            
+´´´
 
 
