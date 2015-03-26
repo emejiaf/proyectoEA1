@@ -296,6 +296,24 @@ prom_SSA <- mean
 ```
 
 
+```{r}
+## validacion por genero
+
+revisar <- function (data){
+    transf <- c(2003:2013)
+    verdadero <- NULL
+    for (i in 1:11){
+      suma <- sum(subset(data, año == transf[i] &       genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(data, año == transf[i] & genero == "femenino")$observaciones,na.rm=TRUE)
+      verdadero[i] <- sum(subset(data, año == transf[i] & genero == "general")$observaciones,na.rm=TRUE) == suma 
+    
+    }
+    all(verdadero)
+}
+
+sum(subset(fuente, año == transf[11] & genero == "general")$observaciones,na.rm=TRUE) == sum(subset(fuente, año == transf[11] &       genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(fuente, año == transf[11] & genero == "femenino")$observaciones,na.rm=TRUE)
+```
+
+
 
 
 
