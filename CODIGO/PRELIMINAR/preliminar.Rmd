@@ -297,44 +297,152 @@ prom_SSA <- mean
 
 
 ```{r}
-## validacion por genero
-
-revisar <- function (data){
-    transf <- c(2003:2013)
-    verdadero <- NULL
-    for (i in 1:11){
-      suma <- sum(subset(data, año == transf[i] & genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(data, año == transf[[i]] & genero == "femenino")$observaciones,na.rm=TRUE)
-      verdadero[[i]] <- sum(subset(data, año == transf[i] & genero == "general")$observaciones,na.rm=TRUE) == suma 
-    
-    }
-    all(verdadero)
-}
-
-sum(subset(fuente, año == transf[11] & genero == "general")$observaciones,na.rm=TRUE) == sum(subset(fuente, año == transf[11] &       genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(fuente, año == transf[11] & genero == "femenino")$observaciones,na.rm=TRUE)
+## sumas de totales
 
 
 
-## sumas totales
+
+
+
+## sumas de observaciones totales por año
 
 transf <- c(2003:2013)
-suma-obs_fem_an <- NULL
+suma_obs_fem_an <- NULL
 for (i in 1:11){
-  suma-obs_fem_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "femenino", select = "observaciones"), na.rm = TRUE)
+  suma_obs_fem_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "femenino", select = "observaciones"), na.rm = TRUE)
   
   }
 
 
-suma-obs_mas_an <- NULL
+suma_obs_mas_an <- NULL
 for (i in 1:11){
-  suma-obs_mas_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "masculino", select = "observaciones"), na.rm = TRUE)
+  suma_obs_mas_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "masculino", select = "observaciones"), na.rm = TRUE)
   
   }
 
+suma_obs_gen_an <- NULL
+for (i in 1:11){
+  suma_obs_gen_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "general", select = "observaciones"), na.rm = TRUE)
+  }
+
+
+## suma de observaciones por mes y genero
+suma_mes_fem <- NULL
+Mes <- list("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+for (i in 1:12){
+  suma_mes_fem[i] <- sum(subset(mes, mes == unlist(Mes[i]) & genero == "femenino", select = "observaciones"), na.rm = TRUE)
+  
+  }
+
+suma_mes_mas <- NULL
+Mes <- list("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+for (i in 1:12){
+  suma_mes_mas[i] <- sum(subset(mes, mes == unlist(Mes[i]) & genero == "masculino", select = "observaciones"), na.rm = TRUE)
+  
+  }
+
+suma_mes_gen <- NULL
+Mes <- list("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre")
+for (i in 1:12){
+  suma_mes_gen[i] <- sum(subset(mes, mes == unlist(Mes[i]) & genero == "general", select = "observaciones"), na.rm = TRUE)
+  
+  }
+
+
+## suma observaciones por fuente y genero
+
+suma_fuente_fem <- NULL
+Fuente <- list("SSA","IMMS","ISSSTE","DIF","PEMEX","SEDENA","SEMAR","OTRAS")
+for (i in 1:8){
+  suma_fuente_fem[i] <- sum(subset(fuente, fuente == unlist(Fuente[i]) & genero == "femenino", select = "observaciones"), na.rm = TRUE)
+  
+  }
+
+suma_fuente_mas <- NULL
+
+for (i in 1:8){
+  suma_fuente_mas[i] <- sum(subset(fuente, fuente == unlist(Fuente[i]) & genero == "masculino", select = "observaciones"), na.rm = TRUE)
+  
+  }
+
+suma_fuente_gen <- NULL
+
+for (i in 1:8){
+  suma_fuente_gen[i] <- sum(subset(fuente, fuente == unlist(Fuente[i]) & genero == "general", select = "observaciones"), na.rm = TRUE)
+  
+  }
  
+
+##suma observaciones por grupo y genero
+
+Grupo <- list("---1","1---4","5---9","10---14","15---19","20---24","25---44","45---49","50---59","60---64","65---","desconocido")
+
+suma_grupo_fem <- NULL
+for (i in 1:12){
+  suma_grupo_fem[i] <- sum(subset(grupo, grupo == unlist(Grupo[i]) & genero == "femenino", select = "observaciones"), na.rm=TRUE) 
+}
+
+suma_grupo_mas <- NULL
+for (i in 1:12){
+  suma_grupo_mas[i] <- sum(subset(grupo, grupo == unlist(Grupo[i]) & genero == "masculino", select = "observaciones"), na.rm=TRUE) 
+}
+
+suma_grupo_gen <- NULL
+for (i in 1:12){
+  suma_grupo_gen[i] <- sum(subset(grupo, grupo == unlist(Grupo[i]) & genero == "general", select = "observaciones"), na.rm=TRUE) 
+}
+
+
+```
+
+```{r}
+## validaciones
+#por fuente
+
+suma_fuente_masfem <- suma_fuente_mas + suma_fuente_fem
+verd_fuente <- suma_fuente_masfem == suma_fuente_gen
+
+#grupo
+suma_grupo_masfem <- suma_grupo_mas + suma_grupo_fem
+verd_grupo <- suma_grupo_masfem == suma_grupo_gen
+
+#mes
+suma_mes_masfem <- suma_mes_mas + suma_mes_fem
+verd_mes <- suma_mes_masfem == suma_mes_gen
+
+columnas <- c("hombres","mujeres","suma hombres y mujeres","general","coinciden")
+
+## data frames validaciones
+validacion_fuente <- data.frame(suma_fuente_mas, suma_fuente_fem, suma_fuente_masfem, suma_fuente_gen, verd_fuente, row.names = Fuente)
+colnames(validacion_fuente) <- columnas
+
+validacion_mes <- data.frame(suma_mes_mas, suma_mes_fem, suma_mes_masfem, suma_mes_gen, verd_mes, row.names = Mes)
+colnames(validacion_mes) <- columnas
+validacion_grupo <- data.frame(suma_grupo_mas, suma_grupo_fem, suma_grupo_masfem, suma_grupo_gen, verd_grupo, row.names = Grupo)
+colnames(validacion_grupo) <- columnas
+
+
 ```
 
 
 
+
+```{r}
+## funcion vieja, quitar tal vez, validacion observaciones totales por genero por df
+
+##validacion por genero
+# revisar <- function (data){
+#    transf <- c(2003:2013)
+#    verdadero <- NULL
+#    for (i in 1:11){
+#      suma <- sum(subset(data, año == transf[i] & genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(data, año == transf[[i]] & genero == "femenino")$observaciones,na.rm=TRUE)
+#      verdadero[[i]] <- sum(subset(data, año == transf[i] & genero == "general")$observaciones,na.rm=TRUE) == suma 
+#   
+#    }
+#    all(verdadero)
+#} 
+
+```
 
 
 
