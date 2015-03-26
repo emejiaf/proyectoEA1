@@ -410,19 +410,45 @@ verd_grupo <- suma_grupo_masfem == suma_grupo_gen
 suma_mes_masfem <- suma_mes_mas + suma_mes_fem
 verd_mes <- suma_mes_masfem == suma_mes_gen
 
-columnas <- c("hombres","mujeres","suma hombres y mujeres","general","coinciden")
+
+
+#medias
+
+media_grupo_gen <- NULL
+for (i in 1:12){
+  media_grupo_gen[i] <- mean(subset(grupo, grupo ==Grupo[i] & genero == "general")$observaciones, na.rm = TRUE)
+}
+
+media_fuente_gen <- NULL
+for (i in 1:8){
+  media_fuente_gen[i] <- mean(subset(fuente, fuente ==Fuente[i] & genero == "general")$observaciones, na.rm = TRUE)
+}
+
+media_mes_gen <- NULL
+for (i in 1:12){
+  media_mes_gen[i] <- mean(subset(mes, mes ==Mes[i] & genero == "general")$observaciones, na.rm = TRUE)
+}
+
+columnas <- c("hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
 
 ## data frames validaciones
-validacion_fuente <- data.frame(suma_fuente_mas, suma_fuente_fem, suma_fuente_masfem, suma_fuente_gen, verd_fuente, row.names = Fuente)
+validacion_fuente <- data.frame(suma_fuente_mas, suma_fuente_fem, suma_fuente_masfem, suma_fuente_gen, verd_fuente,media_fuente_gen, row.names = Fuente)
 colnames(validacion_fuente) <- columnas
 
-validacion_mes <- data.frame(suma_mes_mas, suma_mes_fem, suma_mes_masfem, suma_mes_gen, verd_mes, row.names = Mes)
+validacion_mes <- data.frame(suma_mes_mas, suma_mes_fem, suma_mes_masfem, suma_mes_gen, verd_mes, media_mes_gen,row.names = Mes)
 colnames(validacion_mes) <- columnas
-validacion_grupo <- data.frame(suma_grupo_mas, suma_grupo_fem, suma_grupo_masfem, suma_grupo_gen, verd_grupo, row.names = Grupo)
+validacion_grupo <- data.frame(suma_grupo_mas, suma_grupo_fem, suma_grupo_masfem, suma_grupo_gen, verd_grupo, media_grupo_gen,row.names = Grupo)
 colnames(validacion_grupo) <- columnas
 
 
 ```
+
+```{r}
+
+
+
+```
+
 
 
 
