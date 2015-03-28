@@ -1,18 +1,51 @@
 ---
+title: "Reporte t??cnico"
+output: html_document
+autor: Jos?? Luis Moreno y Enrique Mej??a
+---
 
 
 
 ```{r directorio}
 
-directorio <- "C:\\Users\\Patatas\\Desktop\\ea1-pr"
+directorio <- "/Users/IMEJIAF/proyectoEA1"
 setwd(directorio)
 
 ```
 
+#Introducci??n
+
+La diabetes mellitus tipo dos es una de las enfermedades definitorias de la sociedad moderna occidental. Se trata de un trastorno metab??lico que inhibe la creaci??n y tolerancia normal a la insulina en sangre, causando episodios de hipoglucemia peligrosos. Daba su naturaleza cr??nica y el tipo de tratamiento que requiere, es indispensable saber en d??nde hay brotes de diabetes para poder responder con pol??ticas de salud p??blica adecuadas. 
+
+##Base de datos
+
+Nuestra base de datos de trabajo, descargada en forma de 99 archivos pdf del portal de la Secretar??a de Salud (SSA) comprende informaci??n anual, desde 2003 a 2013. Cada una de las noventa y nueve tablas descargadas contiene de s?? el a??o, g??nero y entidad federativa de las observaciones; mientras existen tres categor??as para diferenciar los mismos:
+
+1. Por fuente de notificaci??n
+2. Por mes de observaci??n
+3. Por grupo de edad
+
+#Definici??n del problema
+
+Una vez descargados (en una misma carpeta en zip) las 99 tablas guardadas como pdf, procedimos a convertir cada archivo a csv. Usamos el *software* "Nitro" para converitir cada tabla a formato xlsx y despu??s convertimos manualmente cada una a formato csv. De paso eliminamos de cada tabla la columna y rengl??n de total por considerarla informaci??n redundante al an??lisis adem??s de f??cilmente recuperable en R. En algunas tablas (las que la ten??an), eliminamos la variable de incidencia (casos por cien mil habitantes en la entidad federativa) y de tasa (tasa de poblaci??n femenina por entidad federativa) por las mimsas razones que la anterior. 
+
+M??s all?? de la conversi??n de los archivos, el problema principal radica en poder analizar e interpretar los datos para encontrar la historia que se esconde en ellos y poder comunicarla construyendo una narrativa adecuada. Nos interesa saber el comportamiento de la diabetes a nivel nacional; en d??nde y cu??do hay m??s casos, en qu?? grupos pobacionales, en qu?? a??os. Cualquier cosa que salte como inesperada ser?? analizada para intentar hallar una explicaci??n a los fen??menos contenidos en la informaci??n que se nos porporcion??.
+
+El objetivo principal es identificar patrones en los datos de diabetes a nivel nacional que permitan a la SSA atender mejor a sus pacientes y dise??ar mejores pol??ticas para combatir este trastorno; esperamos poder evidenciar de manera clara, comparable, reproducible, bien documentada y coherente esa historia.
+
+#Obtenci??n y descripci??n de los datos
+
+Cargamos cada uno de los noventa y nueva archivos en formato csv a R. Usamos la misma nomenclatura con que fueron descargados, donde el archivo "f-f_2005" son las observaciones por fuente de notifiaci??n, femeninas, para el a??o 2005. El primer caracter codifica el tipo de tabla ("f" - por fuente de notificaci??n, "g" - por grupo de edad, "m" - por mes), el tercero el g??nero ("f" - femenino, "m - masculino", "g" - general, entendido como la suma de observaciones femeninas y masculinas, sujeto a posterior validaci??n) y los ??ltimos cuatro caracteres el a??o. Tenemos treinta y tres tablas de cada tipo, que se ven de la siguiente manera:
+
+1. Ejemplo por fuente, ??head(f-m_2009)??
+1. Ejemplo por grupo, ??head(g-m_2009)??
+1. Ejemplo por mes, ??head(m-m_2009)??
+
+Hay mucho por hacer
 
 
-### Librerias utilizadas
 ```{r Librerias, results = 'hide'}
+### Librerias utilizadas
 paquetes.utilizados <- c("reshape2", "tidyr", "xtable", "knitr", "qdap",
                          "dplyr", "plyr", "lubridate", "ggplot2", "openxlsx")
 paquetes.instalados <- rownames(installed.packages())
@@ -27,8 +60,7 @@ lapply(paquetes.utilizados, library, character.only = TRUE)
 
 
 ```{r  lectura}
-setwd("./DATOS/BRUTOS/csv")
-nombres <- list.files(pattern= "*.csv")
+nombres <- list.files(path ="/Users/IMEJIAF/proyectoEA1/DATOS/BRUTOS/csv", pattern= "*.csv")
 for (i in 1:length(nombres)){
   assign( substr(nombres[i], 1, nchar(nombres[i])-4), read.csv(nombres[i],stringsAsFactors=FALSE))
 }
@@ -42,6 +74,9 @@ for (i in 1:length(nombres)){
 }
 
 ```
+
+
+
 
 
 
@@ -67,18 +102,26 @@ for (i in 67:99){
 
 ```
 
+#Transformaci??n de los datos
 
+##Formato
+
+A cada *data frame* le aplicamos la func??n melt(), de reshape2, para pasar al formato largo.
+
+Nuestra estructura ahora se ve as??:
+
+??head(f-m_2009)??
 
 
 
 
 ```{r agregar columnas}
-## agregar año
+## agregar a??o
 
 for (i in 1:99){
   t <- unlist(nombres_sin[i])
   tdf <- get(unlist(nombres_sin[i])) 
-  assign(unlist(nombres_sin[i]), data.frame(tdf, año = as.integer(substr(t,5,8))))
+  assign(unlist(nombres_sin[i]), data.frame(tdf, a??o = as.integer(substr(t,5,8))))
   
 }
 
@@ -106,6 +149,15 @@ for (i in 1:99){
 
 ```
 
+##Agregamos columnas
+
+Para poder unir nuestras tablas sin perder informaci??n, agregamos a cada una una columna con el a??o (2003:2013) y otra con el g??nero ("femenino", "masculino" y "general"). 
+
+Ahora as?? se ve cada una:
+
+??head(f-m_2009)??
+
+
 
 
 ```{r unir en tres tablas}
@@ -131,13 +183,23 @@ for(i in 69:99){
 }
 ```
 
+##Agrupaci??n de los datos
 
 
+Si los datos fueran ideales; es decir, se adirieran a la definici??n de *tidy data*, podr??amos unir todos en una sola table donde cada rengl??n fuera una observaci??n y cada coulmna una variable. Desgraciadamente, los datos de la SSA no cumplen esta definici??n pues resulta imposible encontrar una relaci??n uno a uno entre los datos que se encuentran en distintos tipos de tablas. Esto es que no sabemos en d??nde fue noificado un caso que se di?? en enero, ni en qu?? grupo de edad se encuentra. 
+
+Por esto, nos quedamos con tres unidades observacionales; fuente, grupo y mes, y unimos cada subconjnto de treinta y tres tablas en tres grandes tablas llamadas fuente, grupo y mes.
+
+Ahora, contamos con la siguiente estrucutra:
+
+??str(fuente)??
+??str(grupo)??
+??str(mes)??
 
 ```{r limpieza}
 ###limpieza fuente: nombres de estados repetidos eliminados, reclasificacion de columnas
 ##numero
-estados <- list("Aguascalientes","Baja California","Baja California Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","México","Michoacán","Morelos","Nayarit","Nuevo León","Oaxaca","Puebla","Querétaro","Quintana Roo","San Luis Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas")
+estados <- list("Aguascalientes","Baja California","Baja California Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","M??xico","Michoac??n","Morelos","Nayarit","Nuevo Le??n","Oaxaca","Puebla","Quer??taro","Quintana Roo","San Luis Potos??","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucat??n","Zacatecas")
 
 fuente <- within(fuente,{
                          observaciones  <- gsub(" ","", observaciones)
@@ -149,9 +211,9 @@ fuente <- within(fuente,{
                          Estado <- gsub("Baja CaliforniaSur","Baja California Sur",Estado)
                          Estado <- gsub("Baja CaliforniaSu","Baja California Sur",Estado)
                          Estado <- gsub("Baja California Sur ","Baja California Sur",Estado)
-                         Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
+                         Estado <- gsub("San Luis Potosi","San Luis Potos??",Estado)
                          Estado <- as.factor(Estado)
-                         fuente <- gsub("Institución............................................................................................DIF","DIF", fuente)
+                         fuente <- gsub("Instituci??n............................................................................................DIF","DIF", fuente)
                          fuente <- gsub("Otras","OTRAS", fuente)
                          fuente <- gsub("Salud", "SALUD", fuente)
                          fuente <- gsub("SEDEMAR", "SEMAR", fuente)
@@ -172,7 +234,7 @@ fuente <- subset (fuente, select= 1:5)##corregir columna agredada (i=32)
 
 grupo <- within(grupo,{
                        Estado <- gsub("Baja California  Sur","Baja California Sur",Estado)
-                       Estado <- gsub("San Luis Potosi","San Luis Potosí",Estado)
+                       Estado <- gsub("San Luis Potosi","San Luis Potos??",Estado)
                        Estado <- as.factor(Estado)
                        observaciones  <- gsub(" ","", observaciones)
                        observaciones <- as.integer(observaciones)
@@ -215,14 +277,14 @@ mes <- within(mes,{
                          Estado <- gsub("Baja CaliforniaSur","Baja California Sur",Estado)
                          Estado <- gsub("Baja CaliforniaSu","Baja California Sur",Estado)
                          Estado <- gsub("Baja California Sur ","Baja California Sur",Estado)
-                         Estado <- gsub("San Luis Potosi","San Luis Potosí�",Estado)
-                         Estado<-gsub("San Luis Potosí ","San Luis Potosí",Estado)
-                         Estado<-gsub("México ","México",Estado)
-                         Estado<-gsub("Michoacán ","Michoacán",Estado)
-                         Estado<-gsub("Nuevo León ","Nuevo León",Estado)
-                         Estado<-gsub("Yucatán ","Yucatán",Estado)
-                         Estado<-gsub("Queretaro","Querétaro",Estado)
-                         Estado<-gsub("San Luis Poto.*","San Luis Potosí",Estado)
+                         Estado <- gsub("San Luis Potosi","San Luis Potos???",Estado)
+                         Estado<-gsub("San Luis Potos?? ","San Luis Potos??",Estado)
+                         Estado<-gsub("M??xico ","M??xico",Estado)
+                         Estado<-gsub("Michoac??n ","Michoac??n",Estado)
+                         Estado<-gsub("Nuevo Le??n ","Nuevo Le??n",Estado)
+                         Estado<-gsub("Yucat??n ","Yucat??n",Estado)
+                         Estado<-gsub("Queretaro","Quer??taro",Estado)
+                         Estado<-gsub("San Luis Poto.*","San Luis Potos??",Estado)
                      
                          Estado <- as.factor(Estado)
                          
@@ -260,6 +322,22 @@ mes <- subset (mes, select= 1:5)
 
 ```
 
+##Limpieza de los datos
+
+Procedemos a limpiar los datos de informaci??n repetida. Para ello suponemos que "SEDEMAR" significa lo mismo que "SEMAR", agrupamos todas las instancias de "IMMS.Ord" e "IMMS.Op" en un solo "IMMS", corregimos nombres de estado escritos de diferentes maneras y normalizamos los nombres de cada mes a un solo formato. As??mismo, cambiamos la clase de cada variable, pensando en graficar posteriormente, dejando el a??o como *int* y el resto como *factor*.
+
+Nos quedamos con la estructura limpia:
+
+??str(fuente)??
+??str(grupo)??
+??str(mes)??
+
+Que se ve como:
+
+??head(fuente)??
+??head(grupo)??
+??head(mes)??
+
 
 
 
@@ -279,18 +357,29 @@ faltantes_mes_porc <- 100 * faltantes_mes_abs  / length(mes$observaciones)
 
 ```
 
-```{r agregar columna promedios}
 
-nom_fuente <- as.list(unique(fuente$fuente))
+#Calidad de los datos
 
-for (i in length(nom_fuente)){
-  if()
-  
-  
-}
-prom_SSA <- mean
+##Validaci??nes
 
-```
+###Valores faltantes
+
+Contamos los valores faltantes de la columna observaciones (la ??nica en que pueden existir), en t??rminos absoutos y relativos; es decir, calculamos el total de valores faltantes y el porcentaje que representan del total.
+
+Tenemos:
+1. Fuente
+Valores faltantes: ??faltantes_fuente_abs??
+Porcentaje del total: ??faltantes_fuente_porc??
+
+2. Grupo
+Valores faltantes: ??faltantes_grupo_abs??
+Porcentaje del total: ??faltantes_grupo_porc??
+
+3. Mes
+Valores faltantes: ??faltantes_mes_abs??
+Porcentaje del total: ??faltantes_mes_porc??
+
+
 
 
 ```{r}
@@ -301,25 +390,25 @@ prom_SSA <- mean
 
 
 
-## sumas de observaciones totales por año
+## sumas de observaciones totales por a??o
 
 transf <- c(2003:2013)
 suma_obs_fem_an <- NULL
 for (i in 1:11){
-  suma_obs_fem_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "femenino", select = "observaciones"), na.rm = TRUE)
+  suma_obs_fem_an[i] <- sum(subset(fuente, a??o ==transf[i] & genero == "femenino", select = "observaciones"), na.rm = TRUE)
   
   }
 
 
 suma_obs_mas_an <- NULL
 for (i in 1:11){
-  suma_obs_mas_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "masculino", select = "observaciones"), na.rm = TRUE)
+  suma_obs_mas_an[i] <- sum(subset(fuente, a??o ==transf[i] & genero == "masculino", select = "observaciones"), na.rm = TRUE)
   
   }
 
 suma_obs_gen_an <- NULL
 for (i in 1:11){
-  suma_obs_gen_an[i] <- sum(subset(fuente, año ==transf[i] & genero == "general", select = "observaciones"), na.rm = TRUE)
+  suma_obs_gen_an[i] <- sum(subset(fuente, a??o ==transf[i] & genero == "general", select = "observaciones"), na.rm = TRUE)
   }
 
 
@@ -392,6 +481,7 @@ for (i in 1:12){
 
 ```
 
+
 ```{r}
 ## validaciones
 #por fuente
@@ -444,17 +534,33 @@ colnames(validacion_grupo) <- columnas
 
 ```
 
+###VG??nero
+
+Esperar??amos que el n??mero de observaciones reportadas como masculinas sumadas a las femeninas diera las generales, en todos los casos. Realizamos esta validaci??n para cada a??o y tipo de observaci??n.
+
+Guardamos estos resultados en tres tablas nuevas, que ademas contienen el total y media de observaciones en cada caso.
+
+??validacion_fuente??
+??validacion_grupo??
+??validacion_mes??
+
+##Conjunto de datos ideal
+
+Como se vi?? anteriormente, las validaciones aplicadas a los datos fueron muy insatisfactorias. Se espera consistencia en la informaci??n, que es deficiente. Nuestro conjunto de datos ideal para este problema hubiera pasado nuestras validaciones sin problema alguno, adem??s de haber sido recopilado como un solo conjunto observacional para poder ser analizado en conjunto y llegar a conclusiones a??n m??s poderosas y reveladoras. 
+
+Como recomendaci??n para la levantaci??n futura de informaci??n por parte de la SSA est?? el evitar la codificaci??n de valores faltantes (pues pudieron haber reportado cero observaciones en su lugar) y ser cuidadosos para asegurar que coincidan las observaciones generales con las masculians y femeninas. As?? como no reportar sus datos en formato pdf sino csv, para poder ser f??cilmente importados a diversos *softwares* estad??sticos.
+
 ```{r}
 
 ## suma por estados por a;o
-Estados <- list("Aguascalientes","Baja_California","Baja_California_Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito_Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","México","Michoacán","Morelos","Nayarit","Nuevo_León","Oaxaca","Puebla","Querétaro","Quintana_Roo","San_Luis_Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas")
+Estados <- list("Aguascalientes","Baja_California","Baja_California_Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito_Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","M??xico","Michoac??n","Morelos","Nayarit","Nuevo_Le??n","Oaxaca","Puebla","Quer??taro","Quintana_Roo","San_Luis_Potos??","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucat??n","Zacatecas")
 
 sum_estado_an_gen <- NULL
 for (i in 1:32){
   nombre <-paste0("sum_",Estados[i],"_an_gen") 
   nombre <- list()
   for (j in 1:11){
-    nombre[j] <- sum(subset(fuente, Estado == unlist(Estados[i]) & genero == "general" & año == transf[j], select= "observaciones"), na.rm=TRUE)
+    nombre[j] <- sum(subset(fuente, Estado == unlist(Estados[i]) & genero == "general" & a??o == transf[j], select= "observaciones"), na.rm=TRUE)
   }
 }
 
@@ -462,6 +568,8 @@ for (i in 1:32){
 
 
 ```
+
+
 
 
 
@@ -475,8 +583,8 @@ for (i in 1:32){
 #    transf <- c(2003:2013)
 #    verdadero <- NULL
 #    for (i in 1:11){
-#      suma <- sum(subset(data, año == transf[i] & genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(data, año == transf[[i]] & genero == "femenino")$observaciones,na.rm=TRUE)
-#      verdadero[[i]] <- sum(subset(data, año == transf[i] & genero == "general")$observaciones,na.rm=TRUE) == suma 
+#      suma <- sum(subset(data, a??o == transf[i] & genero == "masculino")$observaciones,na.rm=TRUE) + sum(subset(data, a??o == transf[[i]] & genero == "femenino")$observaciones,na.rm=TRUE)
+#      verdadero[[i]] <- sum(subset(data, a??o == transf[i] & genero == "general")$observaciones,na.rm=TRUE) == suma 
 #   
 #    }
 #    all(verdadero)
@@ -484,27 +592,26 @@ for (i in 1:32){
 
 ```
 
+#An??lisis exploratorio
+
 
 
 ```{r}
 
-ggplot(grupo,aes(x=Estado,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
-names(grupo)
-ggplot(grupo,aes(x=año,y=observaciones),nrow=2)+geom_line()+facet_wrap(~genero) +theme(axis.text.x=element_text(angle=90))
+mediaglobal.mes<-mean(validacion_mes$media)
+mediaglobal.grupo<-mean(validacion_grupo$media)
+mediaglobal.fuente<-mean(validacion_fuente$media)
 
-ggplot(fuente,aes(x=Estado,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
+ggplot(fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))
 
-ggplot(fuente,aes(x=fuente,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
-ggplot(mes,aes(x=Estado,y=observaciones))+geom_boxplot()+facet_wrap(~año+genero)
+ggplot(mes,aes(x=Estado,y=observaciones,fill=mes))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=3))+coord_flip()+scale_fill_manual(values=topo.colors(12))
 
-ggplot(mes,aes(x=mes,y=observaciones),mean(y))+geom_boxplot()+facet_wrap(~año+genero)
+ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))
+
+ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.mes,size=2)
+
+ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.grupo,size=2)+coord_flip()
 ```
-```{r practica}
-ggplot(fuente,aes(x=año,y=observaciones))+geom_line(aes(colour=fuente))+facet_wrap(~fuente)+theme(axis.text.x=element_text(angle=90))+theme(legend.position="none",strip.text = element_text(face = "bold"),axis.text.x = element_text(size=15), axis.text.y = element_text(size=15),strip.background = element_blank(),axis.text = element_text(colour="grey",axis.ticks=element_line(colour="grey",axis.title = element_text(colour="grey", size=12), plot.title = element_text(size =20)))
-                                                                                                
-                                                                                                                                            
-ggplot(validacion_fuente, aes(x= rownames, y = general ))  +geom_line()                                                                                                                                          
-                                                                                                                                            
-´´´
+
 
 
