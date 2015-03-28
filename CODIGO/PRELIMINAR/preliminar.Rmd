@@ -540,18 +540,18 @@ for (i in 1:12){
   media_mes_gen[i] <- mean(subset(mes, mes ==Mes[i] & genero == "general")$observaciones, na.rm = TRUE)
 }
 
-columnas <- c("fuente","hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
+columnas <- c("fuente","hombres","mujeres","suma_hombres_mujeres","general","coinciden","media")
 
 ## data frames validaciones
 validacion_fuente <- data.frame( unlist(Fuente), suma_fuente_mas, suma_fuente_fem, suma_fuente_masfem, suma_fuente_gen, verd_fuente,media_fuente_gen)
 colnames(validacion_fuente) <- columnas
 
-columnas <- c("mes","hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
+columnas <- c("mes","hombres","mujeres","suma_hombres_mujeres","general","coinciden","media")
 
 validacion_mes <- data.frame(unlist(Mes),suma_mes_mas, suma_mes_fem, suma_mes_masfem, suma_mes_gen, verd_mes, media_mes_gen)
 colnames(validacion_mes) <- columnas
 
-columnas <- c("grupo","hombres","mujeres","suma hombres y mujeres","general","coinciden","media")
+columnas <- c("grupo","hombres","mujeres","suma_hombres_mujeres","general","coinciden","media")
 validacion_grupo <- data.frame(unlist(Grupo),suma_grupo_mas, suma_grupo_fem, suma_grupo_masfem, suma_grupo_gen, verd_grupo, media_grupo_gen)
 colnames(validacion_grupo) <- columnas
 
@@ -586,6 +586,13 @@ write.csv(grupo, file = "DATOS/PROCESADOS/grupo.csv")
 write.csv(validacion_fuente, file = "DATOS/PROCESADOS/validacion_fuente.csv")
 write.csv(validacion_grupo, file = "DATOS/PROCESADOS/validacion_grupo.csv")
 write.csv(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.csv")
+
+save(fuente, file = "DATOS/PROCESADOS/fuente.RData")
+save(mes, file = "DATOS/PROCESADOS/mes.RData")
+save(grupo, file = "DATOS/PROCESADOS/grupo.RData")
+save(validacion_fuente, file = "DATOS/PROCESADOS/validacion_fuente.RData")
+save(validacion_grupo, file = "DATOS/PROCESADOS/validacion_grupo.RData")
+save(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.RData")
 ```
 
 
@@ -634,23 +641,33 @@ write.csv(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.csv")
 #An??lisis exploratorio
 
 
-
 ```{r}
-
 mediaglobal.mes<-mean(validacion_mes$media)
 mediaglobal.grupo<-mean(validacion_grupo$media)
 mediaglobal.fuente<-mean(validacion_fuente$media)
 
 ggplot(fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))
 
+```
+
+
+```{r}
 ggplot(mes,aes(x=Estado,y=observaciones,fill=mes))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=3))+coord_flip()+scale_fill_manual(values=topo.colors(12))
+```
 
+
+```{r}
 ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))
+```
 
-ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.mes,size=2)
-
-ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.grupo,size=2)+coord_flip()
+```{r}
+ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.mes,size=2) 
 ``` 
+
+
+```{r}
+ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.grupo,size=2)+coord_flip()
+```
 
 
 
