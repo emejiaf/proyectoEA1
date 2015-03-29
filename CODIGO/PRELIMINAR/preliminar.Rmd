@@ -1,50 +1,52 @@
 ---
-title: "Reporte t??cnico"
-output: html_document
-autor: Jos?? Luis Moreno y Enrique Mej??a
+title: "Reporte técnico"
+autor: "José Luis Moreno y Enrique Mejía"
+output: 
+  html_document: default
+
 ---
 
 
 
-```{r directorio}
+```{r directorio, echo=FALSE}
 
 directorio <- "/Users/IMEJIAF/proyectoEA1"
 setwd(directorio)
 
 ```
 
-#Introducci??n
+#Introducción
 
-La diabetes mellitus tipo dos es una de las enfermedades definitorias de la sociedad moderna occidental. Se trata de un trastorno metab??lico que inhibe la creaci??n y tolerancia normal a la insulina en sangre, causando episodios de hipoglucemia peligrosos. Daba su naturaleza cr??nica y el tipo de tratamiento que requiere, es indispensable saber en d??nde hay brotes de diabetes para poder responder con pol??ticas de salud p??blica adecuadas. 
+La diabetes mellitus tipo dos es una de las enfermedades definitorias de la sociedad moderna occidental. Se trata de un trastorno metabólico que inhibe la creación y tolerancia normal a la insulina en sangre, causando episodios de hipoglucemia peligrosos. Daba su naturaleza crónica y el tipo de tratamiento que requiere, es indispensable saber en dónde hay brotes de diabetes para poder responder con políticas de salud pública adecuadas. 
 
 ##Base de datos
 
-Nuestra base de datos de trabajo, descargada en forma de 99 archivos pdf del portal de la Secretar??a de Salud (SSA) comprende informaci??n anual, desde 2003 a 2013. Cada una de las noventa y nueve tablas descargadas contiene de s?? el a??o, g??nero y entidad federativa de las observaciones; mientras existen tres categor??as para diferenciar los mismos:
+Nuestra base de datos de trabajo, descargada en forma de 99 archivos pdf del portal de la Secretaría de Salud (SSA) comprende información anual, desde 2003 a 2013. Cada una de las noventa y nueve tablas descargadas contiene de sí el año, género y entidad federativa de las observaciones; mientras existen tres categorías para diferenciar los mismos:
 
-1. Por fuente de notificaci??n
-2. Por mes de observaci??n
+1. Por fuente de notificación
+2. Por mes de observación
 3. Por grupo de edad
 
-#Definici??n del problema
+#Definición del problema
 
-Una vez descargados (en una misma carpeta en zip) las 99 tablas guardadas como pdf, procedimos a convertir cada archivo a csv. Usamos el *software* "Nitro" para converitir cada tabla a formato xlsx y despu??s convertimos manualmente cada una a formato csv. De paso eliminamos de cada tabla la columna y rengl??n de total por considerarla informaci??n redundante al an??lisis adem??s de f??cilmente recuperable en R. En algunas tablas (las que la ten??an), eliminamos la variable de incidencia (casos por cien mil habitantes en la entidad federativa) y de tasa (tasa de poblaci??n femenina por entidad federativa) por las mimsas razones que la anterior. 
+Una vez descargados (en una misma carpeta en zip) las 99 tablas guardadas como pdf, procedimos a convertir cada archivo a csv. Usamos el *software* "Nitro" para converitir cada tabla a formato xlsx y después convertimos manualmente cada una a formato csv. De paso eliminamos de cada tabla la columna y renglón de total por considerarla información redundante al análisis además de fácilmente recuperable en R. En algunas tablas (las que la tenían), eliminamos la variable de incidencia (casos por cien mil habitantes en la entidad federativa) y de tasa (tasa de población femenina por entidad federativa) por las mimsas razones que la anterior. 
 
-M??s all?? de la conversi??n de los archivos, el problema principal radica en poder analizar e interpretar los datos para encontrar la historia que se esconde en ellos y poder comunicarla construyendo una narrativa adecuada. Nos interesa saber el comportamiento de la diabetes a nivel nacional; en d??nde y cu??do hay m??s casos, en qu?? grupos pobacionales, en qu?? a??os. Cualquier cosa que salte como inesperada ser?? analizada para intentar hallar una explicaci??n a los fen??menos contenidos en la informaci??n que se nos porporcion??.
+Más allá de la conversión de los archivos, el problema principal radica en poder analizar e interpretar los datos para encontrar la historia que se esconde en ellos y poder comunicarla construyendo una narrativa adecuada. Nos interesa saber el comportamiento de la diabetes a nivel nacional; en dónde y cuádo hay más casos, en qué grupos pobacionales, en qué años. Cualquier cosa que salte como inesperada será analizada para intentar hallar una explicación a los fenómenos contenidos en la información que se nos porporcionó.
 
-El objetivo principal es identificar patrones en los datos de diabetes a nivel nacional que permitan a la SSA atender mejor a sus pacientes y dise??ar mejores pol??ticas para combatir este trastorno; esperamos poder evidenciar de manera clara, comparable, reproducible, bien documentada y coherente esa historia.
+El objetivo principal es identificar patrones en los datos de diabetes a nivel nacional que permitan a la SSA atender mejor a sus pacientes y diseñar mejores políticas para combatir este trastorno; esperamos poder evidenciar de manera clara, comparable, reproducible, bien documentada y coherente esa historia.
 
-#Obtenci??n y descripci??n de los datos
+#Obtención y descripción de los datos
 
-Cargamos cada uno de los noventa y nueva archivos en formato csv a R. Usamos la misma nomenclatura con que fueron descargados, donde el archivo "f-f_2005" son las observaciones por fuente de notifiaci??n, femeninas, para el a??o 2005. El primer caracter codifica el tipo de tabla ("f" - por fuente de notificaci??n, "g" - por grupo de edad, "m" - por mes), el tercero el g??nero ("f" - femenino, "m - masculino", "g" - general, entendido como la suma de observaciones femeninas y masculinas, sujeto a posterior validaci??n) y los ??ltimos cuatro caracteres el a??o. Tenemos treinta y tres tablas de cada tipo, que se ven de la siguiente manera:
-
-
+Cargamos cada uno de los noventa y nueva archivos en formato csv a R. Usamos la misma nomenclatura con que fueron descargados, donde el archivo "f-f_2005" son las observaciones por fuente de notifiación, femeninas, para el año 2005. El primer caracter codifica el tipo de tabla ("f" - por fuente de notificación, "g" - por grupo de edad, "m" - por mes), el tercero el género ("f" - femenino, "m - masculino", "g" - general, entendido como la suma de observaciones femeninas y masculinas, sujeto a posterior validación) y los últimos cuatro caracteres el año. Tenemos treinta y tres tablas de cada tipo, que se ven de la siguiente manera:
 
 
 
 
 
 
-```{r Librerias, results = 'hide',echo=FALSE}
+
+
+```{r Librerias, results = 'hide',echo=FALSE,message=FALSE}
 ### Librerias utilizadas
 paquetes.utilizados <- c("reshape2", "tidyr", "xtable", "knitr", "qdap",
                          "dplyr", "plyr", "lubridate", "ggplot2", "openxlsx")
@@ -112,13 +114,13 @@ for (i in 67:99){
 
 ```
 
-#Transformaci??n de los datos
+#Transformación de los datos
 
 ##Formato
 
-A cada *data frame* le aplicamos la func??n melt(), de reshape2, para pasar al formato largo.
+A cada *data frame* le aplicamos la funcón melt(), de reshape2, para pasar al formato largo.
 
-Nuestra estructura ahora se ve as??:
+Nuestra estructura ahora se ve así:
 
 ```{r}
 head(get("f_m-2009"))
@@ -165,9 +167,9 @@ for (i in 1:99){
 
 ##Agregamos columnas
 
-Para poder unir nuestras tablas sin perder informaci??n, agregamos a cada una una columna con el a??o (2003:2013) y otra con el g??nero ("femenino", "masculino" y "general"). 
+Para poder unir nuestras tablas sin perder información, agregamos a cada una una columna con el año (2003:2013) y otra con el género ("femenino", "masculino" y "general"). 
 
-Ahora as?? se ve cada una:
+Ahora así se ve cada una:
 
 ```{r}
 head(get("f_m-2009"))
@@ -178,7 +180,7 @@ head(get("f_m-2009"))
 
 
 
-```{r unir en tres tablas,echo=FALSE}
+```{r unir en tres tablas,echo=FALSE,warning=FALSE}
 ## por fuente 
 fuente <- rbind(get(unlist(nombres_sin[1])),get(unlist(nombres_sin[2])))
 for(i in 3:33){
@@ -201,10 +203,10 @@ for(i in 69:99){
 }
 ```
 
-##Agrupaci??n de los datos
+##Agrupación de los datos
 
 
-Si los datos fueran ideales; es decir, se adirieran a la definici??n de *tidy data*, podr??amos unir todos en una sola table donde cada rengl??n fuera una observaci??n y cada coulmna una variable. Desgraciadamente, los datos de la SSA no cumplen esta definici??n pues resulta imposible encontrar una relaci??n uno a uno entre los datos que se encuentran en distintos tipos de tablas. Esto es que no sabemos en d??nde fue noificado un caso que se di?? en enero, ni en qu?? grupo de edad se encuentra. 
+Si los datos fueran ideales; es decir, se adirieran a la definición de *tidy data*, podríamos unir todos en una sola table donde cada renglón fuera una observación y cada coulmna una variable. Desgraciadamente, los datos de la SSA no cumplen esta definición pues resulta imposible encontrar una relación uno a uno entre los datos que se encuentran en distintos tipos de tablas. Esto es que no sabemos en dónde fue noificado un caso que se dió en enero, ni en qué grupo de edad se encuentra. 
 
 Por esto, nos quedamos con tres unidades observacionales; fuente, grupo y mes, y unimos cada subconjnto de treinta y tres tablas en tres grandes tablas llamadas fuente, grupo y mes.
 
@@ -219,7 +221,7 @@ str(mes)
 
 
 
-```{r limpieza,echo=FALSE}
+```{r limpieza,echo=FALSE,warning=FALSE}
 ###limpieza fuente: nombres de estados repetidos eliminados, reclasificacion de columnas
 ##numero
 estados <- list("Aguascalientes","Baja California","Baja California Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","Mexico","Michoacan","Morelos","Nayarit","Nuevo Leon","Oaxaca","Puebla","Queretaro","Quintana Roo","San Luis Potosi","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatan","Zacatecas")
@@ -366,7 +368,7 @@ mes <- subset (mes, select= 1:5)
 
 ##Limpieza de los datos
 
-Procedemos a limpiar los datos de informaci??n repetida. Para ello suponemos que "SEDEMAR" significa lo mismo que "SEMAR", agrupamos todas las instancias de "IMMS.Ord" e "IMMS.Op" en un solo "IMMS", corregimos nombres de estado escritos de diferentes maneras y normalizamos los nombres de cada mes a un solo formato. As??mismo, cambiamos la clase de cada variable, pensando en graficar posteriormente, dejando el a??o y observaciones como *int* y el resto como *factor*.
+Procedemos a limpiar los datos de información repetida. Para ello suponemos que "SEDEMAR" significa lo mismo que "SEMAR", agrupamos todas las instancias de "IMMS.Ord" e "IMMS.Op" en un solo "IMMS", corregimos nombres de estado escritos de diferentes maneras y normalizamos los nombres de cada mes a un solo formato. Asímismo, cambiamos la clase de cada variable, pensando en graficar posteriormente, dejando el año y observaciones como *int* y el resto como *factor*.
 
 Nos quedamos con la estructura limpia:
 
@@ -414,11 +416,11 @@ faltantes_mes_porc <- 100 * faltantes_mes_abs  / length(mes$observaciones)
 
 #Calidad de los datos
 
-##Validaci??nes
+##Validaciónes
 
 ###Valores faltantes
 
-Contamos los valores faltantes de la columna observaciones (la ??nica en que pueden existir), en t??rminos absoutos y relativos; es decir, calculamos el total de valores faltantes y el porcentaje que representan del total.
+Contamos los valores faltantes de la columna observaciones (la única en que pueden existir), en términos absoutos y relativos; es decir, calculamos el total de valores faltantes y el porcentaje que representan del total.
 
 Tenemos:
 1. Fuente
@@ -604,9 +606,9 @@ colnames(validacion_grupo) <- columnas
 
 ```
 
-###G??nero
+###Género
 
-Esperar??amos que el n??mero de observaciones reportadas como masculinas sumadas a las femeninas diera las generales, en todos los casos. Realizamos esta validaci??n para cada a??o y tipo de observaci??n.
+Esperaríamos que el número de observaciones reportadas como masculinas sumadas a las femeninas diera las generales, en todos los casos. Realizamos esta validación para cada año y tipo de observación.
 
 Guardamos estos resultados en tres tablas nuevas, que ademas contienen el total y media de observaciones en cada caso.
 
@@ -620,12 +622,12 @@ validacion_mes
 
 ##Conjunto de datos ideal
 
-Como se vi?? anteriormente, las validaciones aplicadas a los datos fueron muy insatisfactorias. Se espera consistencia en la informaci??n, que es deficiente. Nuestro conjunto de datos ideal para este problema hubiera pasado nuestras validaciones sin problema alguno, adem??s de haber sido recopilado como un solo conjunto observacional para poder ser analizado en conjunto y llegar a conclusiones a??n m??s poderosas y reveladoras. 
+Como se vió anteriormente, las validaciones aplicadas a los datos fueron muy insatisfactorias. Se espera consistencia en la información, que es deficiente. Nuestro conjunto de datos ideal para este problema hubiera pasado nuestras validaciones sin problema alguno, además de haber sido recopilado como un solo conjunto observacional para poder ser analizado en conjunto y llegar a conclusiones aún más poderosas y reveladoras. 
 
-Como recomendaci??n para la levantaci??n futura de informaci??n por parte de la SSA est?? el evitar la codificaci??n de valores faltantes (pues pudieron haber reportado cero observaciones en su lugar) y ser cuidadosos para asegurar que coincidan las observaciones generales con las masculians y femeninas. As?? como no reportar sus datos en formato pdf sino csv, para poder ser f??cilmente importados a diversos *softwares* estad??sticos.
+Como recomendación para la levantación futura de información por parte de la SSA está el evitar la codificación de valores faltantes (pues pudieron haber reportado cero observaciones en su lugar) y ser cuidadosos para asegurar que coincidan las observaciones generales con las masculians y femeninas. Así como no reportar sus datos en formato pdf sino csv, para poder ser fácilmente importados a diversos *softwares* estadísticos.
 
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,warning=FALSE}
 
 #guardamos nuestros datos procesados
 
@@ -687,58 +689,101 @@ save(validacion_mes, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validac
 
 ```
 
-#An??lisis exploratorio
+#Análisis exploratorio
 
 
-```{r,echo=FALSE}
+##Observaciones por estado, género y fuente
+
+En la siguiente gráfica observamos una desagregación de los casos por estado, fuente y género que nos permite ubicar con exactitud dónde están la mayoría de los casos. Estos están en el estado de México,  Jalisco y Distrito Federal, donde hay más casos femeninos que masculinos en los tres casos. Apenas se reportan casos Campeche, Baja California Sur, Zacatecas, Tlaxcala, etc.
+
+Es difícil observar qué fuente agrupa la mayoría de casos, para lo que nos valdremos de mayor análisis posterior.
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
 #mediaglobal.mes <- as.numeric(mean(unlist(validacion_mes$media)))
 #mediaglobal.grupo <- as.numeric(mean(unlist(validacion_grupo$media)))
 #mediaglobal.fuente <- as.numeric(mean(unlist(validacion_fuente$media)))
 
-#ggplot(fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))
+ggplot(data = fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(position="stack",stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+coord_flip()+facet_wrap(~genero) +ggtitle("Casos de Diabetes Mellitus tipo dos entre 2003 y 2013 a nivel nacional")
+
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_genero_estado.png")
 
 ```
 
+##Por género
 
-```{r}
-#ggplot(mes,aes(x=Estado,y=observaciones,fill=mes))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=3))+coord_flip()+scale_fill_manual(values=topo.colors(12))
+La siguiente nos permite desagregar aún más para ver en qué mes hay más casos, por esado y género; se trata de casos totales entre 2003 y 2013.
+
+Los mismos estados siguen sobresaliendo por cantidad, mientras necesitaos mayor información para decir qué mes tiene el mayor número de casos. 
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE,fig.width=16,fig.height=13}
+ggplot(mes,aes(x=Estado,y=observaciones,fill=genero))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=3))+coord_flip()+ggtitle("Casos de Diabetes Mellitus tipo dos entre 2003 y 2013 a nivel nacional")+facet_wrap(~mes)
+
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/genero_mes(desagregado).png", width = 16, height = 13)
 ```
 
+## Por grupo
 
-```{r,echo=FALSE}
-#ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))
+La sigueinte se vale de una escala de calor para identificar los grupos de edad con mayor incidencia de casos, por estado. De nuevo, es claro qué estados tienen el mayor número de casos pero no qué grupos. 
+
+A continuación nuestra solución.
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(position="stack",stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))+coord_flip()+ggtitle("Casos de Diabetes Mellitus tipo dos entre 2003 y 2013 a nivel nacional")
+
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_genero.png")
 ```
 ##Medias de 2003:2013 por mes
 
-Tomando la media de observaciones por a??o para el periodo de 2003 a 2013, vemos en la siguiente gr??fica que el mes de Marzo es el que tiene m??s casos en promedio. De hecho, parece que los meses m??s calidos (Mayo, Marzo, Junio, Julio, Agosto, Abril) son los ??nios que logran rebasar la media global, con la excepci??n de Octube y Enero. 
+Tomando la media de observaciones por año para el periodo de 2003 a 2013, vemos en la siguiente gráfica que el mes de Marzo es el que tiene más casos en promedio. De hecho, parece que los meses más calidos (Mayo, Marzo, Junio, Julio, Agosto, Abril) son los únios que logran rebasar la media global, con la excepción de Octube y Enero. 
 
-El mes con menor n??mero de casos en promedio es, por mucho, Diciembre. Esto salta a la vista pues n se espera que la diabetes sea una enfermedad estacional. Probablemente haya otra variable que explique este fen??meno, como en qu?? momento se busca el tratamiento en lugar de en qu?? momento se manifesta el trastorno.
+El mes con menor número de casos en promedio es, por mucho, Diciembre. Esto salta a la vista pues n se espera que la diabetes sea una enfermedad estacional. Probablemente haya otra variable que explique este fenómeno, como en qué momento se busca el tratamiento en lugar de en qué momento se manifesta el trastorno.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
 ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_mes$media))),size=2) + coord_flip() +ggtitle("Media de observaciones anuales entre 2003 y 2013, por mes")
 
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_mes.png")
 
 ``` 
 
 ##Medias de 2003:2013 por grupo de edad
 
-Esta gr??fica se observa muy consistente con lo esperado. El grupo que en promedio registra m??s casos en el periodod es el de cinciuenta a cincuenta y nueve a??os. Seguido cercanamente de el de veinticino a cuarenta y cuatro y el de sesenta y cinco en adelante. Es inesperado que en el grupo de sesenta a sesenta y cuatro haya menos casos en promedio que entre los dos que lo rodean (cincuenta a cincuenta y nueve y sesenta y cinco en adelante). Esto se debe posiblemente a que los grupos de edad no comprenden los mismos per??odos de tiempo, dejando que ambos grupos aleda??os al de sesenta a sesenta y cuatro acumulen muchos m??s casos pues abarcan per??odos mucho m??s grandes. Como sugerencia para mejorar el an??lisis a futuro est?? el normalizar los grupos de edad para que comprendan todos per??odos del mismo tiempo; as?? eliminando el sesgo que esto introduce.
+Esta gráfica se observa muy consistente con lo esperado. El grupo que en promedio registra más casos en el periodod es el de cinciuenta a cincuenta y nueve años. Seguido cercanamente de el de veinticino a cuarenta y cuatro y el de sesenta y cinco en adelante. Es inesperado que en el grupo de sesenta a sesenta y cuatro haya menos casos en promedio que entre los dos que lo rodean (cincuenta a cincuenta y nueve y sesenta y cinco en adelante). Esto se debe posiblemente a que los grupos de edad no comprenden los mismos períodos de tiempo, dejando que ambos grupos aledaños al de sesenta a sesenta y cuatro acumulen muchos más casos pues abarcan períodos mucho más grandes. Como sugerencia para mejorar el análisis a futuro está el normalizar los grupos de edad para que comprendan todos períodos del mismo tiempo; así eliminando el sesgo que esto introduce.
 
-No se observan casos significativos hasta despu??s de los veinticinco a??os, pero no podemos saber con exactitud en qu?? edad comienzan la mauor??a de los casos por lo largo de ese grupo, que comprende casi veinte a??os.
+No se observan casos significativos hasta después de los veinticinco años, pero no podemos saber con exactitud en qué edad comienzan la mauoría de los casos por lo largo de ese grupo, que comprende casi veinte años.
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
 ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_grupo$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por grupo de edad")
+
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_grupo.png") 
 ```
 
-##Media de 2003:2013 por fuente de notificaci??n
+##Media de 2003:2013 por fuente de notificación
 
-Sobresale significativamente la SSA como la mayor fuente de notificaci??n de casos, en promedio. Seguida de IMMS, ISSTE y OTRAS; SEDENA, PEMEX, SEMAR y DIF se encuentran muy por debajo de la media global, probablemente porque se trata se proveedores de servicios de salud que no atienden a la poblaci??n en general sino a grupos especializados. 
+Sobresale significativamente la SSA como la mayor fuente de notificación de casos, en promedio. Seguida de IMMS, ISSTE y OTRAS; SEDENA, PEMEX, SEMAR y DIF se encuentran muy por debajo de la media global, probablemente porque se trata se proveedores de servicios de salud que no atienden a la población en general sino a grupos especializados. 
 
-```{r,echo=FALSE}
-ggplot(validacion_fuente,aes(x=fuente,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_fuente$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por fuente de notificaci??n")
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+ggplot(validacion_fuente,aes(x=fuente,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_fuente$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por fuente de notificación")
+
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_fuente.png")
 ```
 
-#Conclusi??n
+#Conclusión
+
+
+Después de transformar, limpiar y analisar los datos provenientes de la SSA, llegamos a varias conclusiones importantes además de las ya mencionadas recomendaciones a futuro para la elaboración de mejores datos. 
+
+1. El mayor número de casos está a partir de los veinticinco años, sin que se pueda decir con exactitud en qué edad hay mayor incidencia. 
+
+2. Los estados con mayor número de casos son: México, Distrito Federal y Jalisco; que al mismo tiempo están entre os estados con mayor población. Sin embargo, Veracruz que también cuenta con amplia población no figura tan alto en observaciones. Tal vez haya factores geográficos y climáticos en juego; así como recomendamos extender el análisis para incluir variables de calidad de vida, nivel de educación, ocupación, urbanización, etc para poder encontrar la relación (si existe) entre el estilo de vida y la incidencia de diabetes.
+
+3. La fuente de notificación mayor es la Secretaría de Salud, que atiende a quienes no están afiliados a alguna otra instancia de seguro médico público o privado a través del Seguro Popular. Si se agregara la variable de ingreso a la recabación de datos se podría buscar la correlación que esto parece sugerir. Así se podría orientar mejor la política pública en específico a la población de ingresos más bajos.
+
+4. El mes de menor reporte de casos es Diciembre, no acertamos a hallar una explicación para esto. Algunas ideas son que no coincide la fecha de manifestación del trsatorno con la fecha en que se busca tratamiento; derivado tal vez de falta de ingreso por gastos extraordinarios (Diciembre es el mes de mayor gasto para las familias mexicanas). De nuevo, de tener la variable ingreso disponible, podriamos probar esta correlación si resultara que para aquellos de ingreso medio y alto, el mes de Diciembre registrara e mismo número de casos que el resto.
+
+5. La población femenina tiene más incidencia que la masculina. Habría que revisar de nuevo más variables como las antes mencionadas para probar hipótesis que expliquen permitan construir una relación causal para esta regularidad empírica.
+
+
+6. Marzo en particular y los meses cálidos tienen mayor número de casos. Hay que revisar la literatura médica para buscar una relación entre calor e incidencia de diabetes.
+
 
 
 
