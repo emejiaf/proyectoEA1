@@ -37,14 +37,14 @@ El objetivo principal es identificar patrones en los datos de diabetes a nivel n
 
 Cargamos cada uno de los noventa y nueva archivos en formato csv a R. Usamos la misma nomenclatura con que fueron descargados, donde el archivo "f-f_2005" son las observaciones por fuente de notifiaci??n, femeninas, para el a??o 2005. El primer caracter codifica el tipo de tabla ("f" - por fuente de notificaci??n, "g" - por grupo de edad, "m" - por mes), el tercero el g??nero ("f" - femenino, "m - masculino", "g" - general, entendido como la suma de observaciones femeninas y masculinas, sujeto a posterior validaci??n) y los ??ltimos cuatro caracteres el a??o. Tenemos treinta y tres tablas de cada tipo, que se ven de la siguiente manera:
 
-1. Ejemplo por fuente, ??head(f-m_2009)??
-1. Ejemplo por grupo, ??head(g-m_2009)??
-1. Ejemplo por mes, ??head(m-m_2009)??
-
-Hay mucho por hacer
 
 
-```{r Librerias, results = 'hide'}
+
+
+
+
+
+```{r Librerias, results = 'hide',echo=FALSE}
 ### Librerias utilizadas
 paquetes.utilizados <- c("reshape2", "tidyr", "xtable", "knitr", "qdap",
                          "dplyr", "plyr", "lubridate", "ggplot2", "openxlsx")
@@ -59,11 +59,10 @@ lapply(paquetes.utilizados, library, character.only = TRUE)
 ```
 
 
-```{r  lectura}
-setwd("./DATOS/BRUTOS/csv")
+```{r  lectura, echo=FALSE}
 nombres <- list.files(path ="/Users/IMEJIAF/proyectoEA1/DATOS/BRUTOS/csv", pattern= "*.csv")
 for (i in 1:length(nombres)){
-  assign( substr(nombres[i], 1, nchar(nombres[i])-4), read.csv(nombres[i],stringsAsFactors=FALSE))
+  assign( substr(nombres[i], 1, nchar(nombres[i])-4), read.csv(paste0("/Users/IMEJIAF/proyectoEA1/DATOS/BRUTOS/csv/",nombres[i]),stringsAsFactors=FALSE))
 }
 ## error en lectura de f_m-2011 ??
 ##
@@ -72,7 +71,7 @@ for (i in 1:length(nombres)){
 ##
 ```
 
-```{r nombres}
+```{r nombres,echo=FALSE}
 nombres_sin <- nombres
 for (i in 1:length(nombres)){
   nombres_sin[i] <- substr(nombres[i], 1, nchar(nombres[i])-4)
@@ -81,11 +80,17 @@ for (i in 1:length(nombres)){
 ```
 
 
+```{r}
+
+head(get("f_m-2009"))
+head(get("g_m-2009"))
+head(get("m_m-2009"))
+
+```
 
 
 
-
-```{r melt }
+```{r melt ,echo=FALSE}
 
 for (i in 1:33){
   assign(nombres_sin[i], melt (data = get(nombres_sin[i]), variable.name ="fuente", value.name= "observaciones", id =1))
@@ -115,12 +120,16 @@ A cada *data frame* le aplicamos la func??n melt(), de reshape2, para pasar al f
 
 Nuestra estructura ahora se ve as??:
 
-??head(f-m_2009)??
+```{r}
+head(get("f_m-2009"))
+```
 
 
 
 
-```{r agregar columnas}
+
+
+```{r agregar columnas,echo=FALSE}
 ## agregar ano
 
 for (i in 1:99){
@@ -160,12 +169,16 @@ Para poder unir nuestras tablas sin perder informaci??n, agregamos a cada una un
 
 Ahora as?? se ve cada una:
 
-??head(f-m_2009)??
+```{r}
+head(get("f_m-2009"))
+```
 
 
 
 
-```{r unir en tres tablas}
+
+
+```{r unir en tres tablas,echo=FALSE}
 ## por fuente 
 fuente <- rbind(get(unlist(nombres_sin[1])),get(unlist(nombres_sin[2])))
 for(i in 3:33){
@@ -197,11 +210,16 @@ Por esto, nos quedamos con tres unidades observacionales; fuente, grupo y mes, y
 
 Ahora, contamos con la siguiente estrucutra:
 
-??str(fuente)??
-??str(grupo)??
-??str(mes)??
+```{r}
+str(fuente)
+str(grupo)
+str(mes)
 
-```{r limpieza}
+```
+
+
+
+```{r limpieza,echo=FALSE}
 ###limpieza fuente: nombres de estados repetidos eliminados, reclasificacion de columnas
 ##numero
 estados <- list("Aguascalientes","Baja California","Baja California Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","Mexico","Michoacan","Morelos","Nayarit","Nuevo Leon","Oaxaca","Puebla","Queretaro","Quintana Roo","San Luis Potosi","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatan","Zacatecas")
@@ -352,22 +370,34 @@ Procedemos a limpiar los datos de informaci??n repetida. Para ello suponemos que
 
 Nos quedamos con la estructura limpia:
 
-??str(fuente)??
-??str(grupo)??
-??str(mes)??
+
+```{r}
+str(fuente)
+str(grupo)
+str(mes)
+
+```
+
+
 
 Que se ve como:
 
-??head(fuente)??
-??head(grupo)??
-??head(mes)??
+
+```{r}
+head(fuente)
+head(grupo)
+head(mes)
+
+
+```
 
 
 
 
 
 
-```{r} 
+
+```{r,echo=FALSE} 
 ## valores faltantes
 faltantes_fuente_abs <- length(fuente$observaciones[is.na(fuente$observaciones)])
 faltantes_grupo_abs <- length(grupo$observaciones[is.na(grupo$observaciones)])
@@ -392,21 +422,37 @@ Contamos los valores faltantes de la columna observaciones (la ??nica en que pue
 
 Tenemos:
 1. Fuente
-Valores faltantes: ??faltantes_fuente_abs??
-Porcentaje del total: ??faltantes_fuente_porc??
-
+Valores faltantes: 
+```{r, echo=FALSE}
+faltantes_fuente_abs
+```
+Porcentaje del total: 
+```{r, echo=FALSE}
+faltantes_fuente_porc
+```
 2. Grupo
-Valores faltantes: ??faltantes_grupo_abs??
-Porcentaje del total: ??faltantes_grupo_porc??
-
+Valores faltantes:
+```{r, echo=FALSE}
+faltantes_grupo_abs
+```
+Porcentaje del total: 
+```{r, echo=FALSE}
+faltantes_grupo_porc
+```
 3. Mes
-Valores faltantes: ??faltantes_mes_abs??
-Porcentaje del total: ??faltantes_mes_porc??
+Valores faltantes:
+```{r, echo=FALSE}
+faltantes_mes_abs
+```
+Porcentaje del total: 
+```{r, echo=FALSE}
+faltantes_mes_porc
+```
 
 
 
 
-```{r}
+```{r,echo=FALSE}
 ## sumas de totales
 
 
@@ -506,7 +552,7 @@ for (i in 1:12){
 ```
 
 
-```{r}
+```{r,echo=FALSE}
 ## validaciones
 #por fuente
 
@@ -558,15 +604,19 @@ colnames(validacion_grupo) <- columnas
 
 ```
 
-###VG??nero
+###G??nero
 
 Esperar??amos que el n??mero de observaciones reportadas como masculinas sumadas a las femeninas diera las generales, en todos los casos. Realizamos esta validaci??n para cada a??o y tipo de observaci??n.
 
 Guardamos estos resultados en tres tablas nuevas, que ademas contienen el total y media de observaciones en cada caso.
 
-??validacion_fuente??
-??validacion_grupo?? 
-??validacion_mes??
+
+```{r, echo=FALSE}
+validacion_fuente
+validacion_grupo
+validacion_mes
+```
+
 
 ##Conjunto de datos ideal
 
@@ -575,28 +625,27 @@ Como se vi?? anteriormente, las validaciones aplicadas a los datos fueron muy in
 Como recomendaci??n para la levantaci??n futura de informaci??n por parte de la SSA est?? el evitar la codificaci??n de valores faltantes (pues pudieron haber reportado cero observaciones en su lugar) y ser cuidadosos para asegurar que coincidan las observaciones generales con las masculians y femeninas. As?? como no reportar sus datos en formato pdf sino csv, para poder ser f??cilmente importados a diversos *softwares* estad??sticos.
 
 
-```{r}
+```{r,echo=FALSE}
 
 #guardamos nuestros datos procesados
 
-setwd(directorio)
-write.csv(fuente, file = "DATOS/PROCESADOS/fuente.csv")
-write.csv(mes, file = "DATOS/PROCESADOS/mes.csv")
-write.csv(grupo, file = "DATOS/PROCESADOS/grupo.csv")
-write.csv(validacion_fuente, file = "DATOS/PROCESADOS/validacion_fuente.csv")
-write.csv(validacion_grupo, file = "DATOS/PROCESADOS/validacion_grupo.csv")
-write.csv(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.csv")
+write.csv(fuente, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/fuente.csv")
+write.csv(mes, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/mes.csv")
+write.csv(grupo, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/grupo.csv")
+write.csv(validacion_fuente, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validacion_fuente.csv")
+write.csv(validacion_grupo, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validacion_grupo.csv")
+write.csv(validacion_mes, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validacion_mes.csv")
 
-save(fuente, file = "DATOS/PROCESADOS/fuente.RData")
-save(mes, file = "DATOS/PROCESADOS/mes.RData")
-save(grupo, file = "DATOS/PROCESADOS/grupo.RData")
-save(validacion_fuente, file = "DATOS/PROCESADOS/validacion_fuente.RData")
-save(validacion_grupo, file = "DATOS/PROCESADOS/validacion_grupo.RData")
-save(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.RData")
+save(fuente, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/fuente.RData")
+save(mes, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/mes.RData")
+save(grupo, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/grupo.RData")
+save(validacion_fuente, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validacion_fuente.RData")
+save(validacion_grupo, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validacion_grupo.RData")
+save(validacion_mes, file = "/Users/IMEJIAF/proyectoEA1/DATOS/PROCESADOS/validacion_mes.RData")
 ```
 
 
-```{r}
+```{r,echo=FALSE}
 
 ## suma por estados por ano, no usada
 #Estados <- list("Aguascalientes","Baja_California","Baja_California_Sur","Campeche","Coahuila","Colima","Chiapas","Chihuahua","Distrito_Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","Mexico","Michoacan","Morelos","Nayarit","Nuevo_Leon","Oaxaca","Puebla","Queretaro","Quintana_Roo","San_Luis_Potosi","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatan","Zacatecas")
@@ -621,7 +670,7 @@ save(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.RData")
 
 
 
-```{r}
+```{r,echo=FALSE}
 ## funcion vieja, quitar tal vez, validacion observaciones totales por genero por df
 
 ##validacion por genero
@@ -641,33 +690,55 @@ save(validacion_mes, file = "DATOS/PROCESADOS/validacion_mes.RData")
 #An??lisis exploratorio
 
 
-```{r}
-mediaglobal.mes<-mean(validacion_mes$media)
-mediaglobal.grupo<-mean(validacion_grupo$media)
-mediaglobal.fuente<-mean(validacion_fuente$media)
+```{r,echo=FALSE}
+#mediaglobal.mes <- as.numeric(mean(unlist(validacion_mes$media)))
+#mediaglobal.grupo <- as.numeric(mean(unlist(validacion_grupo$media)))
+#mediaglobal.fuente <- as.numeric(mean(unlist(validacion_fuente$media)))
 
-ggplot(fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))
+#ggplot(fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))
 
 ```
 
 
 ```{r}
-ggplot(mes,aes(x=Estado,y=observaciones,fill=mes))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=3))+coord_flip()+scale_fill_manual(values=topo.colors(12))
+#ggplot(mes,aes(x=Estado,y=observaciones,fill=mes))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=3))+coord_flip()+scale_fill_manual(values=topo.colors(12))
 ```
 
 
-```{r}
-ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))
+```{r,echo=FALSE}
+#ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(stat="identity")+facet_wrap(~a??o)+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))
 ```
+##Medias de 2003:2013 por mes
 
-```{r}
-ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.mes,size=2) 
+Tomando la media de observaciones por a??o para el periodo de 2003 a 2013, vemos en la siguiente gr??fica que el mes de Marzo es el que tiene m??s casos en promedio. De hecho, parece que los meses m??s calidos (Mayo, Marzo, Junio, Julio, Agosto, Abril) son los ??nios que logran rebasar la media global, con la excepci??n de Octube y Enero. 
+
+El mes con menor n??mero de casos en promedio es, por mucho, Diciembre. Esto salta a la vista pues n se espera que la diabetes sea una enfermedad estacional. Probablemente haya otra variable que explique este fen??meno, como en qu?? momento se busca el tratamiento en lugar de en qu?? momento se manifesta el trastorno.
+
+```{r, echo=FALSE}
+ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_mes$media))),size=2) + coord_flip() +ggtitle("Media de observaciones anuales entre 2003 y 2013, por mes")
+
+
 ``` 
 
+##Medias de 2003:2013 por grupo de edad
 
-```{r}
-ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=mediaglobal.grupo,size=2)+coord_flip()
+Esta gr??fica se observa muy consistente con lo esperado. El grupo que en promedio registra m??s casos en el periodod es el de cinciuenta a cincuenta y nueve a??os. Seguido cercanamente de el de veinticino a cuarenta y cuatro y el de sesenta y cinco en adelante. Es inesperado que en el grupo de sesenta a sesenta y cuatro haya menos casos en promedio que entre los dos que lo rodean (cincuenta a cincuenta y nueve y sesenta y cinco en adelante). Esto se debe posiblemente a que los grupos de edad no comprenden los mismos per??odos de tiempo, dejando que ambos grupos aleda??os al de sesenta a sesenta y cuatro acumulen muchos m??s casos pues abarcan per??odos mucho m??s grandes. Como sugerencia para mejorar el an??lisis a futuro est?? el normalizar los grupos de edad para que comprendan todos per??odos del mismo tiempo; as?? eliminando el sesgo que esto introduce.
+
+No se observan casos significativos hasta despu??s de los veinticinco a??os, pero no podemos saber con exactitud en qu?? edad comienzan la mauor??a de los casos por lo largo de ese grupo, que comprende casi veinte a??os.
+
+```{r,echo=FALSE}
+ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_grupo$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por grupo de edad")
 ```
+
+##Media de 2003:2013 por fuente de notificaci??n
+
+Sobresale significativamente la SSA como la mayor fuente de notificaci??n de casos, en promedio. Seguida de IMMS, ISSTE y OTRAS; SEDENA, PEMEX, SEMAR y DIF se encuentran muy por debajo de la media global, probablemente porque se trata se proveedores de servicios de salud que no atienden a la poblaci??n en general sino a grupos especializados. 
+
+```{r,echo=FALSE}
+ggplot(validacion_fuente,aes(x=fuente,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_fuente$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por fuente de notificaci??n")
+```
+
+#Conclusi??n
 
 
 
