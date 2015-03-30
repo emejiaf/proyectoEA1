@@ -423,6 +423,7 @@ faltantes_mes_porc <- 100 * faltantes_mes_abs  / length(mes$observaciones)
 Contamos los valores faltantes de la columna observaciones (la única en que pueden existir), en términos absoutos y relativos; es decir, calculamos el total de valores faltantes y el porcentaje que representan del total.
 
 Tenemos:
+
 1. Fuente
 Valores faltantes: 
 ```{r, echo=FALSE}
@@ -705,9 +706,20 @@ Es difícil observar qué fuente agrupa la mayoría de casos, para lo que nos va
 
 ggplot(data = fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(position="stack",stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+coord_flip()+facet_wrap(~genero) +ggtitle("Casos de Diabetes Mellitus tipo dos entre 2003 y 2013 a nivel nacional")
 
-ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_genero_estado.png")
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_genero_estado.png",width = 10, height = 8)
 
 ```
+
+##Por año
+En la siguiente, observamos los casos por estado, fuente de notificación y año. Se nota un gradual incremento en casos a partir de 2007, que se mantiene hasta 2013. 
+
+```{r}
+ggplot(data = fuente,aes(x=Estado,y=observaciones,fill=fuente))+geom_bar(position="stack",stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+coord_flip()+facet_wrap(~ano) +ggtitle("Casos de Diabetes Mellitus tipo dos entre 2003 y 2013 a nivel nacional")
+
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_ano_estado.png",width = 16, height = 13)
+
+```
+
 
 ##Por género
 
@@ -726,10 +738,13 @@ ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/genero_mes(
 La sigueinte se vale de una escala de calor para identificar los grupos de edad con mayor incidencia de casos, por estado. De nuevo, es claro qué estados tienen el mayor número de casos pero no qué grupos. 
 
 A continuación nuestra solución.
+
+
+
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
 ggplot(grupo,aes(x=Estado,y=observaciones,fill=grupo))+geom_bar(position="stack",stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=heat.colors(12))+coord_flip()+ggtitle("Casos de Diabetes Mellitus tipo dos entre 2003 y 2013 a nivel nacional")
 
-ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_genero.png")
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/EXPLORATORIAS/fuente_genero.png",width = 10, height = 8)
 ```
 ##Medias de 2003:2013 por mes
 
@@ -740,7 +755,7 @@ El mes con menor número de casos en promedio es, por mucho, Diciembre. Esto sal
 ```{r, echo=FALSE,warning=FALSE,message=FALSE}
 ggplot(validacion_mes,aes(x=mes,y=media,fill=mes))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_mes$media))),size=2) + coord_flip() +ggtitle("Media de observaciones anuales entre 2003 y 2013, por mes")
 
-ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_mes.png")
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_mes.png",width = 10, height = 8, dpi =72)
 
 ``` 
 
@@ -753,7 +768,7 @@ No se observan casos significativos hasta después de los veinticinco años, per
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
 ggplot(validacion_grupo,aes(x=grupo,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_grupo$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por grupo de edad")
 
-ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_grupo.png") 
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_grupo.png",width = 16, height = 13) 
 ```
 
 ##Media de 2003:2013 por fuente de notificación
@@ -763,7 +778,7 @@ Sobresale significativamente la SSA como la mayor fuente de notificación de cas
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
 ggplot(validacion_fuente,aes(x=fuente,y=media))+geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,size=9))+scale_fill_manual(values=c("#b75b5b", "#7a3d3d", "#eac1c1","#d17575","#db9393","#663333","#3d1e1e","#000000","#663333","#e5b2b2","#a35151","#e0a3a3"))+geom_abline(intercept=as.numeric(mean(unlist(validacion_fuente$media))),size=2)+coord_flip()+ggtitle("Media de observaciones anuales entre 2003 y 2013, por fuente de notificación")
 
-ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_fuente.png")
+ggsave(filename = "/Users/IMEJIAF/proyectoEA1/GRAFICAS/DEFINITIVAS/media_fuente.png",width = 16, height = 13)
 ```
 
 #Conclusión
@@ -773,7 +788,7 @@ Después de transformar, limpiar y analisar los datos provenientes de la SSA, ll
 
 1. El mayor número de casos está a partir de los veinticinco años, sin que se pueda decir con exactitud en qué edad hay mayor incidencia. 
 
-2. Los estados con mayor número de casos son: México, Distrito Federal y Jalisco; que al mismo tiempo están entre os estados con mayor población. Sin embargo, Veracruz que también cuenta con amplia población no figura tan alto en observaciones. Tal vez haya factores geográficos y climáticos en juego; así como recomendamos extender el análisis para incluir variables de calidad de vida, nivel de educación, ocupación, urbanización, etc para poder encontrar la relación (si existe) entre el estilo de vida y la incidencia de diabetes.
+2. Los estados con mayor número de casos son: México, Distrito Federal y Jalisco; que al mismo tiempo están entre los estados con mayor población. Sin embargo, Veracruz que también cuenta con amplia población no figura tan alto en observaciones. Tal vez haya factores geográficos y climáticos en juego; así como recomendamos extender el análisis para incluir variables de calidad de vida, nivel de educación, ocupación, urbanización, etc para poder encontrar la relación (si existe) entre el estilo de vida y la incidencia de diabetes.
 
 3. La fuente de notificación mayor es la Secretaría de Salud, que atiende a quienes no están afiliados a alguna otra instancia de seguro médico público o privado a través del Seguro Popular. Si se agregara la variable de ingreso a la recabación de datos se podría buscar la correlación que esto parece sugerir. Así se podría orientar mejor la política pública en específico a la población de ingresos más bajos.
 
@@ -784,6 +799,7 @@ Después de transformar, limpiar y analisar los datos provenientes de la SSA, ll
 
 6. Marzo en particular y los meses cálidos tienen mayor número de casos. Hay que revisar la literatura médica para buscar una relación entre calor e incidencia de diabetes.
 
+7. Hay un incremento gradual en casos mientras incrementan los años, sin poder identificar un pico claro de observaciones.
 
 
 
